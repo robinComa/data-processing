@@ -1,3 +1,5 @@
+'use strict';
+
 DataProcessing.Processing = DataProcessing.Class.extend({
 
     initialize: function (args, fn) {
