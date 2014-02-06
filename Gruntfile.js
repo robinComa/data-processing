@@ -4,6 +4,8 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
 
+        /** Server */
+
         connect: {
             all: {
                 options:{
@@ -34,8 +36,67 @@ module.exports = function(grunt) {
                 ],
                 tasks: ['livereload']
             }
+        },
+
+        /** END OF Server */
+
+        /** Dist */
+
+        copy: {
+            dist: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '',
+                    dest: 'dist',
+                    src: ['index.html']
+                }]
+            }
+        },
+
+        concat: {
+            dist: {
+                files: {
+                    'dist/dataProcessing.js': [
+                        '.tmp/concat/{,*/}*.js'
+                    ]
+                }
+            }
+        },
+
+        useminPrepare: {
+            html: 'index.html',
+            options: {
+                dest: 'dist'
+            }
+        },
+
+        usemin: {
+            html: ['dist/index.html'],
+            options: {
+                dirs: ['dist']
+            }
+        },
+
+        uglify: {
+            dist: {
+                files: {
+                    'dist/dataProcessing.min.js': ['dist/dataProcessing.js']
+                }
+            }
         }
+
+        /** END OF Dist */
+
     });
+
+    grunt.registerTask('dist',[
+        'copy',
+        'useminPrepare',
+        'usemin',
+        'concat',
+        'uglify'
+    ]);
 
     grunt.registerTask('server',[
         'livereload-start',

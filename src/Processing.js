@@ -1,8 +1,17 @@
 DataProcessing.Processing = DataProcessing.Class.extend({
 
-    initialize: function (fn) {
-        this._worker = new Worker('src/worker.js');
-        this._worker.postMessage(fn.toString());
+    initialize: function (args, fn) {
+
+        var workerCode = [
+            '(',
+            this._workerScaffolding.toString().replace('postMessage()', 'postMessage(('+fn.toString()+')())'),
+            ')();'
+        ].join('');
+
+        var oblob = new Blob([workerCode], { "type" : "text\/javascript" });
+        var domainScriptURL = URL.createObjectURL(oblob);
+
+        this._worker = new Worker(domainScriptURL);
 
         var $scope = this;
 
@@ -17,10 +26,16 @@ DataProcessing.Processing = DataProcessing.Class.extend({
         this._onFinish = callback;
 
         return this;
+    },
+
+    _workerScaffolding: function () {
+        setTimeout(function(){
+            postMessage();//replaced by the user code
+        }, 1000);
     }
 
 });
 
-DataProcessing.processing = function (fn) {
-    return new DataProcessing.Processing(fn);
+DataProcessing.processing = function (args, fn) {
+    return new DataProcessing.Processing(args, fn);
 };
