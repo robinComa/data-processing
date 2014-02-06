@@ -24,7 +24,6 @@ DataProcessing.Processing = DataProcessing.Class.extend({
 
     onFinish: function(callback){
         this._onFinish = callback;
-
         return this;
     },
 

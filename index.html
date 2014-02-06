@@ -6,11 +6,13 @@
     <body>
 
         <!-- build:js dataProcessing.js -->
+        <script src="src/copyright.js"></script>
         <script src="src/DataProcessing.js"></script>
-        <script src="src/Utils.js"></script>
-        <script src="src/Class.js"></script>
-        <script src="src/Processing.js"></script>
+        <script src="src/core/Utils.js"></script>
+        <script src="src/core/Class.js"></script>
+        <script src="src/processing/Processing.js"></script>
         <!-- endbuild -->
+
         <script>
             DataProcessing.processing([], function(){
                 return 'Yeah, I\'m a worker Message!';

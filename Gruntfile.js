@@ -94,8 +94,8 @@ module.exports = function(grunt) {
         'copy',
         'useminPrepare',
         'usemin',
-        'concat',
-        'uglify'
+        'uglify',
+        'concat'
     ]);
 
     grunt.registerTask('server',[
