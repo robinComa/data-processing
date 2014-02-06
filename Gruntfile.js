@@ -84,19 +84,22 @@ module.exports = function(grunt) {
                     'dist/dataProcessing.min.js': ['dist/dataProcessing.js']
                 }
             }
-        }
+        },
 
         /** END OF Dist */
 
-    });
+        /** Test */
 
-    grunt.registerTask('dist',[
-        'copy',
-        'useminPrepare',
-        'usemin',
-        'uglify',
-        'concat'
-    ]);
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js',
+                singleRun: true
+            }
+        }
+
+        /** END OF Test */
+
+    });
 
     grunt.registerTask('server',[
         'livereload-start',
@@ -104,4 +107,18 @@ module.exports = function(grunt) {
         'open',
         'regarde'
     ]);
+
+    grunt.registerTask('dist',[
+        'test',
+        'copy',
+        'useminPrepare',
+        'usemin',
+        'uglify',
+        'concat'
+    ]);
+
+    grunt.registerTask('test',[
+        'karma'
+    ]);
+
 };

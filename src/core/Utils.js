@@ -39,7 +39,21 @@ DataProcessing.Util = {
         return function () {
             return fn.apply(obj, args.length ? args.concat(slice.call(arguments)) : arguments);
         };
-    }
+    },
+
+    // Blob cross browser
+    Blob: function(args, option){
+        if(typeof(Blob) === typeof(Function)){
+            return new window.Blob(args, option);
+        }else{
+            var bb = new(window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder)();
+            bb.append(args);
+            return bb.getBlob(option.type);
+        }
+    },
+
+    // URL cross browser
+    URL: window.URL || window.webkitURL
 };
 
 // shortcuts for most used utility functions

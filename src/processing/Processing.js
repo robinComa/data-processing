@@ -8,8 +8,8 @@ DataProcessing.Processing = DataProcessing.Class.extend({
             ')();'
         ].join('');
 
-        var oblob = new Blob([workerCode], { "type" : "text\/javascript" });
-        var domainScriptURL = URL.createObjectURL(oblob);
+        var oblob = DataProcessing.Util.Blob([workerCode], { type : 'text/javascript' });
+        var domainScriptURL = DataProcessing.Util.URL.createObjectURL(oblob);
 
         this._worker = new Worker(domainScriptURL);
 

@@ -70,7 +70,21 @@ DataProcessing.Util = {
         return function () {
             return fn.apply(obj, args.length ? args.concat(slice.call(arguments)) : arguments);
         };
-    }
+    },
+
+    // Blob cross browser
+    Blob: function(args, option){
+        if(typeof(Blob) === typeof(Function)){
+            return new window.Blob(args, option);
+        }else{
+            var bb = new(window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder)();
+            bb.append(args);
+            return bb.getBlob(option.type);
+        }
+    },
+
+    // URL cross browser
+    URL: window.URL || window.webkitURL
 };
 
 // shortcuts for most used utility functions
@@ -188,8 +202,8 @@ DataProcessing.Processing = DataProcessing.Class.extend({
             ')();'
         ].join('');
 
-        var oblob = new Blob([workerCode], { "type" : "text\/javascript" });
-        var domainScriptURL = URL.createObjectURL(oblob);
+        var oblob = DataProcessing.Util.Blob([workerCode], { type : 'text/javascript' });
+        var domainScriptURL = DataProcessing.Util.URL.createObjectURL(oblob);
 
         this._worker = new Worker(domainScriptURL);
 
@@ -204,7 +218,6 @@ DataProcessing.Processing = DataProcessing.Class.extend({
 
     onFinish: function(callback){
         this._onFinish = callback;
-
         return this;
     },
 
