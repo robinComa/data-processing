@@ -3,24 +3,21 @@
 DataProcessing.Processing = DataProcessing.Class.extend({
 
     initialize: function (args, fn) {
-
-        var workerCode = [
-            '(',
-            this._workerScaffolding.toString().replace('postMessage()', 'postMessage(('+fn.toString()+')())'),
-            ')();'
-        ].join('');
-
-        var oblob = DataProcessing.Util.Blob([workerCode], { type : 'text/javascript' });
-        var domainScriptURL = DataProcessing.Util.URL.createObjectURL(oblob);
+        var blob = DataProcessing.Util.Blob([this._workerCodeCreation(args, fn)], {
+            type : 'text/javascript'
+        });
+        var domainScriptURL = DataProcessing.Util.URL.createObjectURL(blob);
 
         this._worker = new Worker(domainScriptURL);
-
         var $scope = this;
 
         this._worker.onmessage = function (oEvent) {
-            $scope._onFinish(oEvent.data);
+            if($scope._onFinish){
+                $scope._onFinish(oEvent.data);
+            }else{
+                throw 'You should attach a "onFinish" callback function';
+            }
         };
-
         return this;
     },
 
@@ -29,10 +26,21 @@ DataProcessing.Processing = DataProcessing.Class.extend({
         return this;
     },
 
+    _workerCodeCreation: function(args, fn){
+        args = JSON.stringify(args);
+        var code = this._workerScaffolding.toString();
+        code = code.replace('null', fn.toString());
+        code = code.replace('userCode()', 'userCode(' + args.slice(1, args.length - 1) + ')');
+        return [
+            '(',
+            code,
+            ')();'
+        ].join('');
+    },
+
     _workerScaffolding: function () {
-        setTimeout(function(){
-            postMessage();//replaced by the user code
-        }, 1000);
+        var userCode = null;
+        postMessage(userCode());
     }
 
 });
