@@ -9,6 +9,11 @@ DataProcessing.Class = function () {};
 
 DataProcessing.Class.extend = function (props) {
 
+    /** Serialize Object */
+    this.prototype.serialize = function(){
+        return btoa(JSON.stringify(this));
+    };
+
     // extended class with the new prototype
     var NewClass = function () {
 

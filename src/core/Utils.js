@@ -55,7 +55,17 @@ DataProcessing.Util = {
     },
 
     // URL cross browser
-    URL: window.URL || window.webkitURL
+    URL: window.URL || window.webkitURL,
+
+    unSerialize: function(serializedObj, objClass){
+        var obj = eval('(' + atob(serializedObj) + ')');
+
+        if(objClass === DataProcessing.Processing){
+            return new objClass(obj.args, obj.userFn);
+        }
+
+        throw 'unSerialize ERROR : Unsupported class.';
+    }
 };
 
 // shortcuts for most used utility functions

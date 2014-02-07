@@ -8,9 +8,22 @@
         <script src="dataProcessing.js"></script>
 
         <script>
-            DataProcessing.processing([], function(){
-                return 'Yeah, I\'m a worker Message!';
-            }).onFinish(function(result){
+            var p = new DataProcessing.Processing([
+                'param1',
+                [0,1,2,3,{
+                    arg: 'Yeah! I\'m a deep arguments returned by the worker'
+                }]
+            ], function(param1, param2){
+                return param2[4].arg;
+            });
+
+            var serial = p.serialize();
+
+            var p2 = DataProcessing.Util.unSerialize(serial, DataProcessing.Processing);
+
+            p2.run();
+
+            p2.onFinish(function(result){
                 console.log(result);
             });
         </script>
