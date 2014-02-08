@@ -11,6 +11,11 @@ module.exports = function (config) {
             'src/DataProcessing.js',
             'src/core/Utils.js',
             'src/core/Class.js',
+            'src/pipe/Pipe.js',
+            'src/pipe/MemoryPipe.js',
+            'src/pipe/StoragePipe.js',
+            'src/pipe/LocalStoragePipe.js',
+            'src/pipe/SessionStoragePipe.js',
             'src/processing/Processing.js',
             'test/spec/**/*.js'
         ],

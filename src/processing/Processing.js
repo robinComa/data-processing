@@ -25,6 +25,8 @@ DataProcessing.Processing = DataProcessing.Class.extend({
                 throw 'You should attach a "onFinish" callback function';
             }
         };
+
+        return this;
     },
 
     onFinish: function(callback){

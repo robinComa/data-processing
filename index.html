@@ -135,39 +135,45 @@
 
         </div> <!-- /container -->
 
-        <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
-        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-
         <!-- build:js dataProcessing.js -->
         <script src="src/copyright.js"></script>
         <script src="src/DataProcessing.js"></script>
         <script src="src/core/Utils.js"></script>
         <script src="src/core/Class.js"></script>
+        <script src="src/pipe/Pipe.js"></script>
+        <script src="src/pipe/MemoryPipe.js"></script>
+        <script src="src/pipe/StoragePipe.js"></script>
+        <script src="src/pipe/LocalStoragePipe.js"></script>
+        <script src="src/pipe/SessionStoragePipe.js"></script>
         <script src="src/processing/Processing.js"></script>
         <!-- endbuild -->
 
         <script>
             (function(){
-                var p = new DataProcessing.Processing([
-                    'param1',
-                    [0,1,2,3,{
-                        arg: 'Yeah! I\'m a deep arguments returned by the worker'
-                    }]
-                ], function(param1, param2){
-                    return param2[4].arg;
+
+                //var pipe = new DataProcessing.MemoryPipe();
+                //var pipe = new DataProcessing.SessionStoragePipe();
+                var pipe = new DataProcessing.LocalStoragePipe();
+
+                var processing = new DataProcessing.Processing([], function(){
+                    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
                 });
 
-                var serial = p.serialize();
+                pipe.put([processing, processing, processing]);
 
-                var p2 = DataProcessing.Util.unSerialize(serial, DataProcessing.Processing);
-
-                p2.run();
-
-                p2.onFinish(function(result){
+                pipe.onResult(function(result){
                     console.log(result);
                 });
+
+                pipe.onProcessing(function(processing){
+                    processing.run();
+                });
+
             })();
         </script>
+
+        <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
     </body>
 
 </html>
