@@ -1,13 +1,13 @@
 'use strict';
 
-describe('Class : LocalStoragePipe', function () {
+describe('Class : SessionStoragePipe', function () {
 
     var TIMEOUT = 500;
 
 
-    it('LocalStoragePipe should return processings', function () {
+    it('SessionStoragePipe should return processings', function () {
 
-        var pipe = new DataProcessing.LocalStoragePipe();
+        var pipe = new DataProcessing.SessionStoragePipe();
 
         var callback = jasmine.createSpy();
         var p = new DataProcessing.Processing([], function(){
@@ -19,7 +19,7 @@ describe('Class : LocalStoragePipe', function () {
         pipe.onProcessing(callback);
 
         waitsFor(function() {
-            return callback.callCount == 3;
+            return callback.callCount === 3;
         }, 'The Worker end timed out.', TIMEOUT);
 
         runs(function() {
@@ -27,9 +27,9 @@ describe('Class : LocalStoragePipe', function () {
         });
     });
 
-    it('LocalStoragePipe should return results', function () {
+    it('SessionStoragePipe should return results', function () {
 
-        var pipe = new DataProcessing.LocalStoragePipe();
+        var pipe = new DataProcessing.SessionStoragePipe();
 
         var callback = jasmine.createSpy();
         var p = new DataProcessing.Processing([], function(){
@@ -45,7 +45,7 @@ describe('Class : LocalStoragePipe', function () {
         });
 
         waitsFor(function() {
-            return callback.callCount == 3;
+            return callback.callCount === 3;
         }, 'The Worker end timed out.', TIMEOUT);
 
         runs(function() {

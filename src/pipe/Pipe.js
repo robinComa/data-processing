@@ -9,8 +9,7 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
     },
 
     onResult: function(callback){
-        this._onResult = callback;
-        return this;
+        throw 'Pipe : you should implement onResult function';
     },
 
     onProcessing: function(callback){

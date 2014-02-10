@@ -5,26 +5,47 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
     _processings: [],
 
     initialize: function () {
+        if(!DataProcessing.MemoryPipe.PIPE){
+            DataProcessing.MemoryPipe.PIPE = [];
+        }
         return this;
     },
 
     put: function(processings){
-        this._processings = processings;
+        DataProcessing.MemoryPipe.PIPE = processings.concat(this._getProcessings());
+        return this;
+    },
+
+    onResult: function(callback){
+        DataProcessing.MemoryPipe.ON_RESULTS = callback;
         return this;
     },
 
     onProcessing: function(callback){
-        for(var i in this._processings){
-            var processing = this._processings[i];
-            processing.onFinish(this._onResult)
+        var processings = this._sliceProcessing();
+        for(var i in processings){
+            var processing = processings[i];
+            processing.onFinish(DataProcessing.MemoryPipe.ON_RESULTS);
             callback(processing);
         }
         return this;
     },
 
     clear: function(){
-        var processings = this._processings;
-        this._processings = [];
+        DataProcessing.MemoryPipe.PIPE = [];
+    },
+
+    _getProcessings: function(){
+        return DataProcessing.MemoryPipe.PIPE;
+    },
+
+    _setProcessings: function(processings){
+        DataProcessing.MemoryPipe.PIPE = processings;
+    },
+
+    _sliceProcessing: function(){
+        var processings = this._getProcessings();
+        this.clear();
         return processings;
     }
 

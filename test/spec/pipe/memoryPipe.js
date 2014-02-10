@@ -19,7 +19,7 @@ describe('Class : MemoryPipe', function () {
         pipe.onProcessing(callback);
 
         waitsFor(function() {
-            return callback.callCount == 3;
+            return callback.callCount === 3;
         }, 'The Worker end timed out.', TIMEOUT);
 
         runs(function() {
@@ -45,7 +45,7 @@ describe('Class : MemoryPipe', function () {
         });
 
         waitsFor(function() {
-            return callback.callCount == 3;
+            return callback.callCount === 3;
         }, 'The Worker end timed out.', TIMEOUT);
 
         runs(function() {

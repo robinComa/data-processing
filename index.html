@@ -152,8 +152,10 @@
             (function(){
 
                 //var pipe = new DataProcessing.MemoryPipe();
-                //var pipe = new DataProcessing.SessionStoragePipe();
-                var pipe = new DataProcessing.LocalStoragePipe();
+                var pipe = new DataProcessing.SessionStoragePipe();
+                //var pipe = new DataProcessing.LocalStoragePipe();
+
+                //pipe.clear();
 
                 var processing = new DataProcessing.Processing([], function(){
                     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -164,6 +166,18 @@
                 pipe.onResult(function(result){
                     console.log(result);
                 });
+
+                return;
+                pipe.onProcessing(function(processing){
+                    processing.run();
+                });
+
+            })();
+            (function(){
+                //return;
+                //var pipe = new DataProcessing.MemoryPipe();
+                var pipe = new DataProcessing.SessionStoragePipe();
+                //var pipe = new DataProcessing.LocalStoragePipe();
 
                 pipe.onProcessing(function(processing){
                     processing.run();
