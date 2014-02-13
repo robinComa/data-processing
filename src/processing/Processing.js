@@ -4,8 +4,7 @@ DataProcessing.Processing = DataProcessing.Class.extend({
 
     initialize: function (args, fn) {
         this.args = args;
-        this.userFn = fn.toString();
-        this.fn = fn;
+        this.fn = fn.toString();
         return this;
     },
 
@@ -36,9 +35,13 @@ DataProcessing.Processing = DataProcessing.Class.extend({
 
     _workerCodeCreation: function(){
         var args = JSON.stringify(this.args);
-        var code = this._workerScaffolding.toString();
-        code = code.replace('null', this.fn.toString());
-        code = code.replace('userCode()', 'userCode(' + args.slice(1, args.length - 1) + ')');
+        for(var apiKey in this._API){
+            args = args.replace('"' + apiKey + '"', '(' + this._API[apiKey].toString() + ')()');
+        }
+        var code =
+            this._workerScaffolding.toString()
+            .replace('\'__fn__\'', this.fn)
+            .replace('\'__args__\'', args);
         return [
             '(',
             code,
@@ -47,9 +50,22 @@ DataProcessing.Processing = DataProcessing.Class.extend({
     },
 
     _workerScaffolding: function () {
-        // Uses of this to keep userCode name on code minification
-        this.userCode = null;
-        postMessage(this.userCode());
+        postMessage('__fn__'.apply({}, '__args__'));
+    },
+
+    _API: {
+        $http : function(){
+            return {
+                get: function(url){
+                    var request = new XMLHttpRequest();
+                    request.open('GET', url, false);  // `false` makes the request synchronous
+                    request.send(null);
+                    if (request.status === 200) {
+                        return eval('(' + request.responseText + ')');
+                    }
+                }
+            };
+        }
     }
 
 });

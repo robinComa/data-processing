@@ -5,14 +5,14 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
     _processings: [],
 
     initialize: function () {
-        if(!DataProcessing.MemoryPipe.PIPE){
-            DataProcessing.MemoryPipe.PIPE = [];
+        if(!this._getProcessings()){
+            this._setProcessings([]);
         }
         return this;
     },
 
     put: function(processings){
-        DataProcessing.MemoryPipe.PIPE = processings.concat(this._getProcessings());
+        this._setProcessings(processings.concat(this._getProcessings()));
         return this;
     },
 
@@ -32,7 +32,8 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
     },
 
     clear: function(){
-        DataProcessing.MemoryPipe.PIPE = [];
+        this._setProcessings([]);
+        return this;
     },
 
     _getProcessings: function(){
@@ -41,6 +42,7 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
     _setProcessings: function(processings){
         DataProcessing.MemoryPipe.PIPE = processings;
+        return this;
     },
 
     _sliceProcessing: function(){

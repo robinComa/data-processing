@@ -61,7 +61,7 @@ DataProcessing.Util = {
         var obj = eval('(' + atob(serializedObj) + ')');
 
         if(objClass === DataProcessing.Processing){
-            return new objClass(obj.args, obj.userFn);
+            return new objClass(obj.args, obj.fn);
         }
 
         throw 'unSerialize ERROR : Unsupported class.';
