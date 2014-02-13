@@ -63,17 +63,19 @@ module.exports = function(grunt) {
                     cwd: '',
                     dest: 'dist',
                     src: ['index.html']
+                },{
+                    expand: true,
+                    dot: true,
+                    cwd: '.tmp/concat/',
+                    dest: 'dist',
+                    src: ['dataProcessing.js']
+                },{
+                    expand: true,
+                    dot: true,
+                    cwd: '.tmp/concat/vendor/',
+                    dest: 'dist/vendor',
+                    src: ['{,*/}{,*/}*.*']
                 }]
-            }
-        },
-
-        concat: {
-            dist: {
-                files: {
-                    'dist/dataProcessing.js': [
-                        '.tmp/concat/dataProcessing.js'
-                    ]
-                }
             }
         },
 
@@ -88,14 +90,6 @@ module.exports = function(grunt) {
             html: ['dist/index.html'],
             options: {
                 dirs: ['dist']
-            }
-        },
-
-        uglify: {
-            dist: {
-                files: {
-                    'dist/dataProcessing.min.js': ['.tmp/concat/dataProcessing.js']
-                }
             }
         },
 
@@ -124,11 +118,10 @@ module.exports = function(grunt) {
     grunt.registerTask('dist',[
         'clean:dist',
         'karma:unit',
-        'copy:dist',
         'useminPrepare',
-        'usemin',
         'concat',
-        'uglify'
+        'copy:dist',
+        'usemin'
     ]);
 
     grunt.registerTask('test',[
