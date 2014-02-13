@@ -23,7 +23,7 @@ module.exports = function(grunt) {
 
         open: {
             all: {
-                path: 'http://localhost:<%= connect.all.options.port%>'
+                path: 'http://localhost:<%= connect.all.options.port%>/doc'
             }
         },
 
@@ -60,36 +60,36 @@ module.exports = function(grunt) {
                 files: [{
                     expand: true,
                     dot: true,
-                    cwd: '',
-                    dest: 'dist',
-                    src: ['index.html']
-                },{
-                    expand: true,
-                    dot: true,
-                    cwd: '.tmp/concat/',
+                    cwd: '.tmp/',
                     dest: 'dist',
                     src: ['dataProcessing.js']
                 },{
                     expand: true,
                     dot: true,
+                    cwd: '',
+                    dest: 'dist',
+                    src: ['doc/{,*/}*.*']
+                },{
+                    expand: true,
+                    dot: true,
                     cwd: '.tmp/concat/vendor/',
-                    dest: 'dist/vendor',
+                    dest: 'dist/doc/vendor',
                     src: ['{,*/}{,*/}*.*']
                 }]
             }
         },
 
         useminPrepare: {
-            html: 'index.html',
+            html: 'doc/index.html',
             options: {
-                dest: 'dist'
+                dest: 'dist/doc'
             }
         },
 
         usemin: {
-            html: ['dist/index.html'],
+            html: ['dist/doc/index.html'],
             options: {
-                dirs: ['dist']
+                dirs: ['dist/doc']
             }
         },
 
