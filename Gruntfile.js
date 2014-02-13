@@ -30,8 +30,7 @@ module.exports = function(grunt) {
         regarde: {
             all: {
                 files:[
-                    'index.html',
-                    'docs/{,*/}*.html',
+                    'doc/{,*/}*.*',
                     'src/{,*/}*.js'
                 ],
                 tasks: ['livereload']
@@ -80,14 +79,14 @@ module.exports = function(grunt) {
         },
 
         useminPrepare: {
-            html: 'doc/index.html',
+            html: 'doc/*.html',
             options: {
                 dest: 'dist/doc'
             }
         },
 
         usemin: {
-            html: ['dist/doc/index.html'],
+            html: ['dist/doc/*.html'],
             options: {
                 dirs: ['dist/doc']
             }

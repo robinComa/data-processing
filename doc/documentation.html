@@ -1,0 +1,227 @@
+<html>
+<head>
+    <title>DataProcessing : Documentation</title>
+
+    <!-- build:css vendor/bootstrap/bootstrap.min.css -->
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- endbuild -->
+    <!-- build:css vendor/highlightjs/highlightjs.css -->
+    <link rel="stylesheet" href="../bower_components/highlightjs/styles/idea.css">
+    <!-- endbuild -->
+
+    <link rel="stylesheet" href="style/documentation.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <ul class="nav nav-pills pull-right">
+            <li><a href="index.html">Home</a></li>
+            <li class="active"><a href="documentation.html">Documentation</a></li>
+            <li><a target="_blank" href="https://github.com/robinComa/data-processing">Project</a></li>
+        </ul>
+        <h3 class="text-muted">Data Processing</h3>
+    </div>
+
+    <div class="row">
+
+        <div class="col-xs-10">
+            <section id="processing">
+                <h1>Processing</h1>
+
+                <p>
+                    Processing description...
+                </p>
+
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Username</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <pre><code id="processing-code"></code></pre>
+
+            </section>
+
+            <section id="pipe">
+                <h1>Pipe</h1>
+
+                <p>
+                    Pip description...
+                </p>
+
+                <table class="table table-condensed table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Username</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <pre><code id="pipe-code"></code></pre>
+
+            </section>
+        </div>
+
+        <div class="col-xs-2">
+            <ul id="toc">
+                <li>
+                    <a href="#processing">
+                        Processing
+                    </a>
+                </li>
+                <li>
+                    <a href="#pipe">
+                        Pipe
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+</div> <!-- /container -->
+
+<!-- build:js vendor/jquery/jquery.min.js -->
+<script src="../bower_components/jquery/jquery.min.js"></script>
+<!-- endbuild -->
+<!-- build:js vendor/bootstrap/bootstrap.min.js -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- endbuild -->
+<!-- build:js vendor/highlight/highlight.pack.js -->
+<script src="../bower_components/highlightjs/highlight.pack.js"></script>
+<!-- endbuild -->
+
+<!-- build:js ../dataProcessing.js -->
+<script src="../src/copyright.js"></script>
+<script src="../src/DataProcessing.js"></script>
+<script src="../src/core/Utils.js"></script>
+<script src="../src/core/Class.js"></script>
+<script src="../src/pipe/Pipe.js"></script>
+<script src="../src/pipe/MemoryPipe.js"></script>
+<script src="../src/pipe/StoragePipe.js"></script>
+<script src="../src/pipe/LocalStoragePipe.js"></script>
+<script src="../src/pipe/SessionStoragePipe.js"></script>
+<script src="../src/processing/Processing.js"></script>
+<!-- endbuild -->
+
+<script class="code" data-target="#processing-code">
+(function(){
+
+    var processing = new DataProcessing.Processing([
+        'f71dbe52628a3f83a77ab494817525c6',
+        'jij',
+        'http://ip.jsontest.com/',
+        'http://time.jsontest.com/',
+        'http://md5.jsontest.com/?text=',
+        '$http'
+    ], function(target_md5, tested_word, url_ip, url_date, url_md5, $http){
+        var md5 = $http.get(url_md5 + tested_word).md5;
+        if(md5 === target_md5){
+            var ip = $http.get(url_ip);
+            var date = $http.get(url_date);
+            ip.date = date.milliseconds_since_epoch;
+            return ip;
+        }
+        return null;
+    });
+
+})();
+</script>
+
+<script class="code" data-target="#pipe-code">
+(function(){
+
+    var pipe = new DataProcessing.MemoryPipe();
+    //var pipe = new DataProcessing.SessionStoragePipe();
+    //var pipe = new DataProcessing.LocalStoragePipe();
+
+    //pipe.clear();
+
+    var words = [
+        'titi',
+        'tutu',
+        'toto'
+    ];
+    var processings = [];
+
+    for(var i in words){
+        var processing = new DataProcessing.Processing([
+            'f71dbe52628a3f83a77ab494817525c6',
+            words[i],
+            'http://ip.jsontest.com/',
+            'http://time.jsontest.com/',
+            'http://md5.jsontest.com/?text=',
+            '$http'
+        ], function(target_md5, tested_word, url_ip, url_date, url_md5, $http){
+            var md5 = $http.get(url_md5 + tested_word).md5;
+            if(md5 === target_md5){
+                var ip = $http.get(url_ip);
+                var date = $http.get(url_date);
+                ip.date = date.milliseconds_since_epoch;
+                return ip;
+            }
+            return null;
+        });
+        processings.push(processing);
+    }
+
+
+
+    pipe.put(processings);
+
+    pipe.onResult(function(result){
+        console.log(result);
+    });
+
+    return;
+    pipe.onProcessing(function(processing){
+        processing.run();
+    });
+
+})();
+(function(){
+    //return;
+    var pipe = new DataProcessing.MemoryPipe();
+    //var pipe = new DataProcessing.SessionStoragePipe();
+    //var pipe = new DataProcessing.LocalStoragePipe();
+
+    pipe.onProcessing(function(processing){
+        processing.run();
+    });
+
+})();
+</script>
+
+<script src="script/documentation.js"></script>
+
+</body>
+
+</html>
