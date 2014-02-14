@@ -33,29 +33,77 @@
                 <h1>Processing</h1>
 
                 <p>
-                    Processing description...
+                    Used to do a complex processing out of your DOM. It works on web worker.
                 </p>
+
+                <h3>Creation</h3>
+
+                <table class="table table-condensed table-striped">
+                    <thead>
+                    <tr>
+                        <th>Constructor</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>new DataProcessing.Processing(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&gt; args, &lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
+                        <td>Instantiates a Processing object</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h3>Methods</h3>
 
                 <table class="table table-condensed table-striped">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Username</th>
+                            <th>Method</th>
+                            <th>Return</th>
+                            <th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>1</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
+                            <td>run()</td>
+                            <td>this</td>
+                            <td>Start the processing on a new web worker</td>
                         </tr>
                     </tbody>
                 </table>
 
                 <pre><code id="processing-code"></code></pre>
+
+                <article id="processing-http">
+
+                    <h2>$http</h2>
+
+                    <p>
+                        Used to do synchronous AJAX request inside a processing.
+                    </p>
+
+                    <h3>Methods</h3>
+
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Return</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>get(&lt;<a href="http://www.w3schools.com/js/js_obj_string.asp">String</a>&gt; url)</td>
+                            <td>&lt;Object&gt;</td>
+                            <td>AJAX JSON request</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <pre><code id="processing-http-code"></code></pre>
+
+                </article>
 
             </section>
 
@@ -63,68 +111,137 @@
                 <h1>Pipe</h1>
 
                 <p>
-                    Pip description...
+                    Used to exchange processings results and process on a unique "pipe".
                 </p>
 
-                <article id="pipe-pipe">
+                <article id="pipe-interface">
 
-                    <h2>Pipe</h2>
+                    <h2>Pipe Interface</h2>
 
                     <p>
-                        Pip description...
+                        All pipes objects extend this Pipe interface.
                     </p>
+
+                    <h3>Methods</h3>
 
                     <table class="table table-condensed table-striped">
                         <thead>
                         <tr>
-                            <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Username</th>
+                            <th>Method</th>
+                            <th>Return</th>
+                            <th>Description</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td>1</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
+                            <td>put(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&lt;<a href="#processing">Processing</a>&gt;&gt; processings)</td>
+                            <td>&lt;this&gt;</td>
+                            <td>Put a processings set into a pipeline</td>
+                        </tr>
+                        <tr>
+                            <td>onResult(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
+                            <td>&lt;this&gt;</td>
+                            <td>Triggered when a processing result is receive</td>
+                        </tr>
+                        <tr>
+                            <td>onProcessing(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
+                            <td>&lt;this&gt;</td>
+                            <td>Triggered when a processing job is receive</td>
+                        </tr>
+                        <tr>
+                            <td>clear()</td>
+                            <td>&lt;this&gt;</td>
+                            <td>Remove all the processing jobs and results into the pipe</td>
                         </tr>
                         </tbody>
                     </table>
 
-                    <pre><code id="pipe-pipe-code"></code></pre>
-
                 </article>
 
-                <article id="pipe-memory-storage">
+                <article id="pipe-memory">
 
-                    <h2>Pipe</h2>
+                    <h2>MemoryPipe</h2>
 
                     <p>
-                        Pip description...
+                        A MemoryPipe is a Pipe. It works on the browser tab.
                     </p>
+
+                    <h3>Creation</h3>
 
                     <table class="table table-condensed table-striped">
                         <thead>
                         <tr>
-                            <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Username</th>
+                            <th>Constructor</th>
+                            <th>Description</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td>1</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
+                            <td>new DataProcessing.MemoryPipe()</td>
+                            <td>Instantiates a MemoryPipe object</td>
                         </tr>
                         </tbody>
                     </table>
 
                     <pre><code id="pipe-memory-storage-code"></code></pre>
+
+                </article>
+
+                <article id="pipe-session-storage">
+
+                    <h2>SessionStoragePipe</h2>
+
+                    <p>
+                        A SessionStoragePipe is a Pipe. It works on the browser during all the navigation. This pipe could be share between multiple browser tabs. It uses the Web Session Storage.
+                    </p>
+
+                    <h3>Creation</h3>
+
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Constructor</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>new DataProcessing.SessionStoragePipe()</td>
+                            <td>Instantiates a MemoryPipe object</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <pre><code id="pipe-session-storage-code"></code></pre>
+
+                </article>
+
+                <article id="pipe-local-storage">
+
+                    <h2>LocalStoragePipe</h2>
+
+                    <p>
+                        A LocalStoragePipe is a Pipe. It works on the browser. This pipe could be share between multiple browser tabs. It uses the Web Local Storage.
+                    </p>
+
+                    <h3>Creation</h3>
+
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Constructor</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>new DataProcessing.LocalStoragePipe()</td>
+                            <td>Instantiates a MemoryPipe object</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <pre><code id="pipe-local-storage-code"></code></pre>
 
                 </article>
 
@@ -137,6 +254,13 @@
                     <a href="#processing">
                         Processing
                     </a>
+                    <ul>
+                        <li>
+                            <a href="#processing-http">
+                                $http
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="#pipe">
@@ -144,13 +268,23 @@
                     </a>
                     <ul>
                         <li>
-                            <a href="#pipe-storage">
-                                Pipe
+                            <a href="#pipe-interface">
+                                Pipe Interface
                             </a>
                         </li>
                         <li>
-                            <a href="#pipe-memory-storage">
-                                MemoryPipeStorage
+                            <a href="#pipe-memory">
+                                MemoryPipe
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#pipe-session-storage">
+                                SessionStoragePipe
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#pipe-local-storage">
+                                LocalStoragePipe
                             </a>
                         </li>
                     </ul>
@@ -187,89 +321,105 @@
 
 <script class="code" data-target="#processing-code">
 (function(){
-
-    var processing = new DataProcessing.Processing([
-        'f71dbe52628a3f83a77ab494817525c6',
-        'jij',
-        'http://ip.jsontest.com/',
-        'http://time.jsontest.com/',
-        'http://md5.jsontest.com/?text=',
-        '$http'
-    ], function(target_md5, tested_word, url_ip, url_date, url_md5, $http){
-        var md5 = $http.get(url_md5 + tested_word).md5;
-        if(md5 === target_md5){
-            var ip = $http.get(url_ip);
-            var date = $http.get(url_date);
-            ip.date = date.milliseconds_since_epoch;
-            return ip;
-        }
-        return null;
+    var processing = new DataProcessing.Processing(['A piece of text'], function(text){
+        // I am executed by a web worker
+        // Do something difficult
+        // Your context is only the function with parameters
+        return text.length;
     });
 
+    processing.onFinish(function(result){
+        console.log(result);
+    });
+
+    processing.run();
+})();
+</script>
+
+<script class="code" data-target="#processing-http-code">
+(function(){
+    var processing = new DataProcessing.Processing(['$http'], function($http){
+        var worker_ip = $http.get('http://ip.jsontest.com/');
+        return worker_ip;
+    });
+
+    processing.onFinish(function(result){
+        console.log(result);
+    });
+
+    processing.run();
 })();
 </script>
 
 <script class="code" data-target="#pipe-memory-storage-code">
 (function(){
-
-    var pipe = new DataProcessing.MemoryPipe();
-    //var pipe = new DataProcessing.SessionStoragePipe();
-    //var pipe = new DataProcessing.LocalStoragePipe();
-
-    //pipe.clear();
-
-    var words = [
-        'titi',
-        'tutu',
-        'toto'
-    ];
+    var texts = ['A piece of text', 'A piece of text...', 'A piece of text!'];
     var processings = [];
-
-    for(var i in words){
-        var processing = new DataProcessing.Processing([
-            'f71dbe52628a3f83a77ab494817525c6',
-            words[i],
-            'http://ip.jsontest.com/',
-            'http://time.jsontest.com/',
-            'http://md5.jsontest.com/?text=',
-            '$http'
-        ], function(target_md5, tested_word, url_ip, url_date, url_md5, $http){
-            var md5 = $http.get(url_md5 + tested_word).md5;
-            if(md5 === target_md5){
-                var ip = $http.get(url_ip);
-                var date = $http.get(url_date);
-                ip.date = date.milliseconds_since_epoch;
-                return ip;
-            }
-            return null;
-        });
-        processings.push(processing);
+    for(var i in texts){
+        processings.push(new DataProcessing.Processing([texts[i]], function(text){
+            return text.length;
+        }));
     }
 
+    var pipe = new DataProcessing.MemoryPipe();
 
+    pipe.onProcessing(function(processing){
+        processing.run();
+    });
 
     pipe.put(processings);
 
     pipe.onResult(function(result){
         console.log(result);
     });
-
-    return;
-    pipe.onProcessing(function(processing){
-        processing.run();
-    });
-
 })();
+</script>
+
+<script class="code" data-target="#pipe-session-storage-code">
 (function(){
-    //return;
-    var pipe = new DataProcessing.MemoryPipe();
-    //var pipe = new DataProcessing.SessionStoragePipe();
-    //var pipe = new DataProcessing.LocalStoragePipe();
+    var texts = ['A piece of text', 'A piece of text...', 'A piece of text!'];
+    var processings = [];
+    for(var i in texts){
+        processings.push(new DataProcessing.Processing([texts[i]], function(text){
+            return text.length;
+        }));
+    }
+
+    var pipe = new DataProcessing.SessionStoragePipe();
 
     pipe.onProcessing(function(processing){
         processing.run();
     });
 
+    pipe.put(processings);
+
+    pipe.onResult(function(result){
+        console.log(result);
+    });
+})();
+</script>
+
+<script class="code" data-target="#pipe-local-storage-code">
+(function(){
+    var texts = ['A piece of text', 'A piece of text...', 'A piece of text!'];
+    var processings = [];
+    for(var i in texts){
+        processings.push(new DataProcessing.Processing([texts[i]], function(text){
+            return text.length;
+        }));
+    }
+
+    var pipe = new DataProcessing.LocalStoragePipe();
+
+    pipe.onProcessing(function(processing){
+        processing.run();
+    });
+
+    pipe.put(processings);
+
+    pipe.onResult(function(result){
+        console.log(result);
+    });
 })();
 </script>
 

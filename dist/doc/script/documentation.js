@@ -20,10 +20,10 @@
 
         $('section').each(function (index) {
             if (windowTop > ($(this).position().top)){
-                $('#toc > li.active').removeClass('active');
+                $('#toc li.active').removeClass('active');
                 $('#toc > li:eq(' + index + ')').addClass('active');
 
-                $(this).find('article').each(function(index){
+                $('article').each(function(index){
                     if (windowTop > ($(this).position().top)){
                         $('#toc > li > ul > li.active').removeClass('active');
                         $('#toc > li > ul > li:eq(' + index + ')').addClass('active');
