@@ -36,7 +36,45 @@ pre{
     line-height: 1em;
 }
 
+/** TOC */
 ul#toc{
-    padding: 0;
+    padding: 0px;
     list-style-type: none;
 }
+ul#toc li > a{
+    color: #999;
+}
+ul#toc li.active > a{
+    color: #428bca;
+    font-weight: bold;
+    border-left: 2px solid #47a447;
+}
+ul#toc > li > a{
+    padding: 5px 0px 0px 5px;
+    font-size: 18px;
+    height: 30px;
+    display: block;
+}
+ul#toc > li.active > a{
+    padding: 5px 0px 0px 3px;
+}
+ul#toc > li > ul{
+    padding: 0px;
+    display: none;
+}
+ul#toc > li.active > ul{
+    display: block;
+}
+ul#toc > li > ul > li{
+    padding: 0px 0px 0px 0px;
+    list-style-type: none;
+}
+ul#toc > li.active > ul > li > a{
+    padding: 0px 0px 0px 10px;
+    display: block;
+}
+ul#toc > li.active > ul > li.active > a{
+    padding: 0px 0px 0px 8px;
+}
+/** END OF TOC */
+

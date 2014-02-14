@@ -62,33 +62,74 @@
                     Pip description...
                 </p>
 
-                <table class="table table-condensed table-striped">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Username</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <article id="pipe-pipe">
 
-                <pre><code id="pipe-code"></code></pre>
+                    <h2>Pipe</h2>
+
+                    <p>
+                        Pip description...
+                    </p>
+
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Username</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <pre><code id="pipe-pipe-code"></code></pre>
+
+                </article>
+
+                <article id="pipe-memory-storage">
+
+                    <h2>Pipe</h2>
+
+                    <p>
+                        Pip description...
+                    </p>
+
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Username</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <pre><code id="pipe-memory-storage-code"></code></pre>
+
+                </article>
 
             </section>
         </div>
 
         <div class="col-xs-2">
             <ul id="toc">
-                <li>
+                <li class="active">
                     <a href="#processing">
                         Processing
                     </a>
@@ -97,6 +138,18 @@
                     <a href="#pipe">
                         Pipe
                     </a>
+                    <ul>
+                        <li>
+                            <a href="#pipe-storage">
+                                Pipe
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#pipe-memory-storage">
+                                MemoryPipeStorage
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
@@ -135,7 +188,7 @@
 })();
 </script>
 
-<script class="code" data-target="#pipe-code">
+<script class="code" data-target="#pipe-memory-storage-code">
 (function(){
 
     var pipe = new DataProcessing.MemoryPipe();
