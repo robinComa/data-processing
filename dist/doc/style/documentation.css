@@ -62,6 +62,10 @@ pre{
     font-size: 0.8em;
     line-height: 1em;
 }
+code.console{
+    color: #428bca;
+    font-weight: bold;
+}
 
 /** TOC */
 ul#toc{
