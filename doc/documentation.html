@@ -78,6 +78,7 @@
                 </table>
 
                 <pre><code id="processing-code"></code></pre>
+                <pre><code id="processing-console" class="console"></code></pre>
 
                 <article id="processing-http">
 
@@ -100,13 +101,14 @@
                         <tbody>
                         <tr>
                             <td>get(&lt;<a href="http://www.w3schools.com/js/js_obj_string.asp">String</a>&gt; url)</td>
-                            <td>&lt;Object&gt;</td>
+                            <td>&lt;<a href="http://www.w3schools.com/js/js_objects.asp">Object</a>&gt;</td>
                             <td>AJAX JSON request</td>
                         </tr>
                         </tbody>
                     </table>
 
                     <pre><code id="processing-http-code"></code></pre>
+                    <pre><code id="processing-http-console" class="console"></code></pre>
 
                 </article>
 
@@ -189,6 +191,7 @@
                     </table>
 
                     <pre><code id="pipe-memory-storage-code"></code></pre>
+                    <pre><code id="pipe-memory-storage-console" class="console"></code></pre>
 
                 </article>
 
@@ -218,6 +221,7 @@
                     </table>
 
                     <pre><code id="pipe-session-storage-code"></code></pre>
+                    <pre><code id="pipe-session-storage-console" class="console"></code></pre>
 
                 </article>
 
@@ -247,6 +251,7 @@
                     </table>
 
                     <pre><code id="pipe-local-storage-code"></code></pre>
+                    <pre><code id="pipe-local-storage-console" class="console"></code></pre>
 
                 </article>
 
@@ -334,7 +339,7 @@
     });
 
     processing.onFinish(function(result){
-        console.log(result);
+        console.log('#processing-console', result);
     });
 
     processing.run();
@@ -349,7 +354,7 @@
     });
 
     processing.onFinish(function(result){
-        console.log(result);
+        console.log('#processing-http-console', result);
     });
 
     processing.run();
@@ -372,11 +377,11 @@
         processing.run();
     });
 
-    pipe.put(processings);
-
     pipe.onResult(function(result){
-        console.log(result);
+        console.log('#pipe-memory-storage-console', result);
     });
+
+    pipe.put(processings);
 })();
 </script>
 
@@ -399,7 +404,7 @@
     pipe.put(processings);
 
     pipe.onResult(function(result){
-        console.log(result);
+        console.log('#pipe-session-storage-console', result);
     });
 })();
 </script>
@@ -423,7 +428,7 @@
     pipe.put(processings);
 
     pipe.onResult(function(result){
-        console.log(result);
+        console.log('#pipe-local-storage-console', result);
     });
 })();
 </script>
