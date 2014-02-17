@@ -1,6 +1,6 @@
 'use strict';
 
-DataProcessing.Processing = DataProcessing.Class.extend({
+DataProcessing.Job = DataProcessing.Class.extend({
 
     initialize: function (args, fn) {
         this.args = args;

@@ -60,7 +60,7 @@ DataProcessing.Util = {
     unSerialize: function(serializedObj, objClass){
         var obj = eval('(' + atob(serializedObj) + ')');
 
-        if(objClass === DataProcessing.Processing){
+        if(objClass === DataProcessing.Job){
             return new objClass(obj.args, obj.fn);
         }
 

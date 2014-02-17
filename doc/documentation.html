@@ -29,11 +29,11 @@
     <div class="row">
 
         <div class="col-xs-10">
-            <section id="processing">
-                <h1>Processing</h1>
+            <section id="job">
+                <h1>Job</h1>
 
                 <p>
-                    Used to do a complex processing out of your DOM. It works on web worker.
+                    Used to do a complex job out of your DOM. It works on web worker.
                 </p>
 
                 <h3>Creation</h3>
@@ -47,8 +47,8 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>new DataProcessing.Processing(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&gt; args, &lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
-                        <td>Instantiates a Processing object</td>
+                        <td>new DataProcessing.Job(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&gt; args, &lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
+                        <td>Instantiates a Job object</td>
                     </tr>
                     </tbody>
                 </table>
@@ -67,25 +67,25 @@
                         <tr>
                             <td>run()</td>
                             <td>&lt;this&gt;</td>
-                            <td>Start the processing on a new web worker</td>
+                            <td>Start the job on a new web worker</td>
                         </tr>
                         <tr>
                             <td>onFinish(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
                             <td>&lt;this&gt;</td>
-                            <td>Triggered when the processing is finished</td>
+                            <td>Triggered when the job is finished</td>
                         </tr>
                     </tbody>
                 </table>
 
-                <pre><code id="processing-code"></code></pre>
-                <pre><code id="processing-console" class="console"></code></pre>
+                <pre><code id="job-code"></code></pre>
+                <pre><code id="job-console" class="console"></code></pre>
 
-                <article id="processing-http">
+                <article id="job-http">
 
                     <h2>$http</h2>
 
                     <p>
-                        Used to do synchronous AJAX request inside a processing.
+                        Used to do synchronous AJAX request inside a job.
                     </p>
 
                     <h3>Methods</h3>
@@ -107,8 +107,8 @@
                         </tbody>
                     </table>
 
-                    <pre><code id="processing-http-code"></code></pre>
-                    <pre><code id="processing-http-console" class="console"></code></pre>
+                    <pre><code id="job-http-code"></code></pre>
+                    <pre><code id="job-http-console" class="console"></code></pre>
 
                 </article>
 
@@ -118,7 +118,7 @@
                 <h1>Pipe</h1>
 
                 <p>
-                    Used to exchange processings results and process on a unique "pipe".
+                    Used to exchange jobs results and process on a unique "pipe".
                 </p>
 
                 <article id="pipe-interface">
@@ -141,24 +141,24 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>put(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&lt;<a href="#processing">Processing</a>&gt;&gt; processings)</td>
+                            <td>put(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&lt;<a href="#job">Job</a>&gt;&gt; job)</td>
                             <td>&lt;this&gt;</td>
-                            <td>Put a processings set into a pipeline</td>
+                            <td>Put a job set into a pipeline</td>
                         </tr>
                         <tr>
                             <td>onResult(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
                             <td>&lt;this&gt;</td>
-                            <td>Triggered when a processing result is receive</td>
+                            <td>Triggered when a job result is receive</td>
                         </tr>
                         <tr>
-                            <td>onProcessing(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
+                            <td>onJob(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
                             <td>&lt;this&gt;</td>
-                            <td>Triggered when a processing job is receive</td>
+                            <td>Triggered when a job is receive</td>
                         </tr>
                         <tr>
                             <td>clear()</td>
                             <td>&lt;this&gt;</td>
-                            <td>Remove all the processing jobs and results into the pipe</td>
+                            <td>Remove all the jobs and results into the pipe</td>
                         </tr>
                         </tbody>
                     </table>
@@ -261,12 +261,12 @@
         <div class="col-xs-2">
             <ul id="toc">
                 <li class="active">
-                    <a href="#processing">
-                        Processing
+                    <a href="#job">
+                        Job
                     </a>
                     <ul>
                         <li>
-                            <a href="#processing-http">
+                            <a href="#job-http">
                                 $http
                             </a>
                         </li>
@@ -326,82 +326,82 @@
 <script src="../src/pipe/StoragePipe.js"></script>
 <script src="../src/pipe/LocalStoragePipe.js"></script>
 <script src="../src/pipe/SessionStoragePipe.js"></script>
-<script src="../src/processing/Processing.js"></script>
+<script src="../src/job/Job.js"></script>
 <!-- endbuild -->
 
-<script class="code" data-target="#processing-code">
+<script class="code" data-target="#job-code">
 (function(){
-    var processing = new DataProcessing.Processing(['A piece of text'], function(text){
+    var j = new DataProcessing.Job(['A piece of text'], function(text){
         // I am executed by a web worker
         // Do something difficult
         // Your context is only the function with parameters
         return text.length;
     });
 
-    processing.onFinish(function(result){
-        console.log('#processing-console', result);
+    j.onFinish(function(result){
+        console.log('#job-console', result);
     });
 
-    processing.run();
+    j.run();
 })();
 </script>
 
-<script class="code" data-target="#processing-http-code">
+<script class="code" data-target="#job-http-code">
 (function(){
-    var processing = new DataProcessing.Processing(['$http'], function($http){
+    var j = new DataProcessing.Job(['$http'], function($http){
         var worker_ip = $http.get('http://ip.jsontest.com/');
         return worker_ip;
     });
 
-    processing.onFinish(function(result){
-        console.log('#processing-http-console', result);
+    j.onFinish(function(result){
+        console.log('#job-http-console', result);
     });
 
-    processing.run();
+    j.run();
 })();
 </script>
 
 <script class="code" data-target="#pipe-memory-storage-code">
 (function(){
     var texts = ['A piece of text', 'A piece of text...', 'A piece of text!'];
-    var processings = [];
+    var jobs = [];
     for(var i in texts){
-        processings.push(new DataProcessing.Processing([texts[i]], function(text){
+        jobs.push(new DataProcessing.Job([texts[i]], function(text){
             return text.length;
         }));
     }
 
     var pipe = new DataProcessing.MemoryPipe();
 
-    pipe.onProcessing(function(processing){
-        processing.run();
+    pipe.onJob(function(jobs){
+        job.run();
     });
 
     pipe.onResult(function(result){
         console.log('#pipe-memory-storage-console', result);
     });
 
-    pipe.put(processings);
+    pipe.put(jobs);
 })();
 </script>
 
 <script class="code" data-target="#pipe-session-storage-code">
 (function(){
     var texts = ['A piece of text', 'A piece of text...', 'A piece of text!'];
-    var processings = [];
+    var jobs = [];
     for(var i in texts){
-        processings.push(new DataProcessing.Processing([texts[i]], function(text){
+        jobs.push(new DataProcessing.Job([texts[i]], function(text){
             return text.length;
         }));
     }
 
     var pipe = new DataProcessing.SessionStoragePipe();
 
-    pipe.onProcessing(function(processing){
-        processing.run();
+    pipe.onJob(function(job){
+        job.run();
     });
 
-    pipe.put(processings);
+    pipe.put(jobs);
 
     pipe.onResult(function(result){
         console.log('#pipe-session-storage-console', result);
@@ -412,20 +412,20 @@
 <script class="code" data-target="#pipe-local-storage-code">
 (function(){
     var texts = ['A piece of text', 'A piece of text...', 'A piece of text!'];
-    var processings = [];
+    var jobs = [];
     for(var i in texts){
-        processings.push(new DataProcessing.Processing([texts[i]], function(text){
+        jobs.push(new DataProcessing.Job([texts[i]], function(text){
             return text.length;
         }));
     }
 
     var pipe = new DataProcessing.LocalStoragePipe();
 
-    pipe.onProcessing(function(processing){
-        processing.run();
+    pipe.onJob(function(job){
+        job.run();
     });
 
-    pipe.put(processings);
+    pipe.put(jobs);
 
     pipe.onResult(function(result){
         console.log('#pipe-local-storage-console', result);

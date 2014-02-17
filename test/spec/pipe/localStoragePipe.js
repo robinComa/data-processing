@@ -5,18 +5,18 @@ describe('Class : LocalStoragePipe', function () {
     var TIMEOUT = 500;
 
 
-    it('LocalStoragePipe should return processings', function () {
+    it('LocalStoragePipe should return jobs', function () {
 
         var pipe = new DataProcessing.LocalStoragePipe();
 
         var callback = jasmine.createSpy();
-        var p = new DataProcessing.Processing([], function(){
+        var j = new DataProcessing.Job([], function(){
             return;
         });
 
-        pipe.put([p,p,p]);
+        pipe.put([j, j, j]);
 
-        pipe.onProcessing(callback);
+        pipe.onJob(callback);
 
         waitsFor(function() {
             return callback.callCount === 3;
@@ -32,16 +32,16 @@ describe('Class : LocalStoragePipe', function () {
         var pipe = new DataProcessing.LocalStoragePipe();
 
         var callback = jasmine.createSpy();
-        var p = new DataProcessing.Processing([], function(){
+        var j = new DataProcessing.Job([], function(){
             return;
         });
 
-        pipe.put([p,p,p]);
+        pipe.put([j, j, j]);
 
         pipe.onResult(callback);
 
-        pipe.onProcessing(function(processing){
-            processing.run();
+        pipe.onJob(function(job){
+            job.run();
         });
 
         waitsFor(function() {

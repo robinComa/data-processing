@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Class : Processing', function () {
+describe('Class : Job', function () {
 
     var TIMEOUT = 500;
 
@@ -8,13 +8,13 @@ describe('Class : Processing', function () {
     it('Worker should return a message', function () {
 
         var callback = jasmine.createSpy();
-        var p = new DataProcessing.Processing([], function(){
+        var j = new DataProcessing.Job([], function(){
             return;
         });
 
-        p.run();
+        j.run();
 
-        p.onFinish(callback);
+        j.onFinish(callback);
 
         waitsFor(function() {
             return callback.callCount > 0;
@@ -29,13 +29,13 @@ describe('Class : Processing', function () {
 
         var message = null;
 
-        var p = new DataProcessing.Processing([], function(){
+        var j = new DataProcessing.Job([], function(){
             return 'Yeah, I\'m a worker Message!';
         });
 
-        p.run();
+        j.run();
 
-        p.onFinish(function(result){
+        j.onFinish(function(result){
             message = result;
         });
 
@@ -52,7 +52,7 @@ describe('Class : Processing', function () {
 
         var message = null;
 
-        var p = new DataProcessing.Processing([
+        var j = new DataProcessing.Job([
             'param1',
             [0,1,2,3,{
                 arg: 'Yeah! I\'m a deep arguments returned by the worker'
@@ -61,9 +61,9 @@ describe('Class : Processing', function () {
             return param2[4].arg;
         });
 
-        p.run();
+        j.run();
 
-        p.onFinish(function(result){
+        j.onFinish(function(result){
             message = result;
         });
 
@@ -76,11 +76,11 @@ describe('Class : Processing', function () {
         });
     });
 
-    it('Processing should be serialize and unserialize', function () {
+    it('Job should be serialize and unserialize', function () {
 
         var message = null;
 
-        var p = new DataProcessing.Processing([
+        var j = new DataProcessing.Job([
             'param1',
             [0,1,2,3,{
                 arg: 'Yeah! I\'m a deep arguments returned by the worker'
@@ -89,13 +89,13 @@ describe('Class : Processing', function () {
             return param2[4].arg;
         });
 
-        var serial = p.serialize();
+        var serial = j.serialize();
 
-        var p2 = DataProcessing.Util.unSerialize(serial, DataProcessing.Processing);
+        var j2 = DataProcessing.Util.unSerialize(serial, DataProcessing.Job);
 
-        p2.run();
+        j2.run();
 
-        p2.onFinish(function(result){
+        j2.onFinish(function(result){
             message = result;
         });
 

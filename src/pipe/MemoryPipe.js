@@ -2,17 +2,17 @@
 
 DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
-    _processings: [],
+    _jobs: [],
 
     initialize: function () {
-        if(!this._getProcessings()){
-            this._setProcessings([]);
+        if(!this._getJobs()){
+            this._setJobs([]);
         }
         return this;
     },
 
-    put: function(processings){
-        this._setProcessings(processings.concat(this._getProcessings()));
+    put: function(jobs){
+        this._setJobs(jobs.concat(this._getJobs()));
         return this;
     },
 
@@ -21,34 +21,34 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
         return this;
     },
 
-    onProcessing: function(callback){
-        var processings = this._sliceProcessing();
-        for(var i in processings){
-            var processing = processings[i];
-            processing.onFinish(DataProcessing.MemoryPipe.ON_RESULTS);
-            callback(processing);
+    onJob: function(callback){
+        var jobs = this._sliceJob();
+        for(var i in jobs){
+            var job = jobs[i];
+            job.onFinish(DataProcessing.MemoryPipe.ON_RESULTS);
+            callback(job);
         }
         return this;
     },
 
     clear: function(){
-        this._setProcessings([]);
+        this._setJobs([]);
         return this;
     },
 
-    _getProcessings: function(){
+    _getJobs: function(){
         return DataProcessing.MemoryPipe.PIPE;
     },
 
-    _setProcessings: function(processings){
-        DataProcessing.MemoryPipe.PIPE = processings;
+    _setJobs: function(jobs){
+        DataProcessing.MemoryPipe.PIPE = jobs;
         return this;
     },
 
-    _sliceProcessing: function(){
-        var processings = this._getProcessings();
+    _sliceJob: function(){
+        var jobs = this._getJobs();
         this.clear();
-        return processings;
+        return jobs;
     }
 
 });

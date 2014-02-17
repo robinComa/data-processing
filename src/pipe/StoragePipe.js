@@ -2,21 +2,21 @@
 
 DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
 
-    _PROCESSING_PIPE_KEY: 'DATA_PROCESSING : PROCESSING PIPE',
+    _JOB_PIPE_KEY: 'DATA_PROCESSING : JOB PIPE',
     _RESULT_PIPE_KEY: 'DATA_PROCESSING : RESULT PIPE',
-    _INTERVAL_PROCESSING: 100,
+    _INTERVAL_JOB: 100,
     _INTERVAL_RESULT: 100,
 
-    put: function(processings){
-        var processingsQueue = this._getProcessings();
+    put: function(jobs){
+        var jobsQueue = this._getJobs();
 
-        if(processingsQueue === null){
-            processingsQueue = [];
+        if(jobsQueue === null){
+            jobsQueue = [];
         }
-        for(var i in processings){
-            processingsQueue.push(processings[i].serialize());
+        for(var i in jobs){
+            jobsQueue.push(jobs[i].serialize());
         }
-        this._setProcessings(processingsQueue);
+        this._setJobs(jobsQueue);
         return this;
     },
 
@@ -31,39 +31,39 @@ DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
         return this;
     },
 
-    onProcessing: function(callback){
+    onJob: function(callback){
         var $scope = this;
         setInterval(function(){
-            var processings = $scope._sliceProcessings();
-            for(var i in processings){
-                var processing = DataProcessing.Util.unSerialize(processings[i], DataProcessing.Processing);
-                processing.onFinish(function(results){
+            var jobs = $scope._sliceJobs();
+            for(var i in jobs){
+                var job = DataProcessing.Util.unSerialize(jobs[i], DataProcessing.Job);
+                job.onFinish(function(results){
                     $scope._pushResult(results);
                 });
-                callback(processing);
+                callback(job);
             }
-        }, this.INTERVAL_PROCESSING);
+        }, this._INTERVAL_JOB);
         return this;
     },
 
     clear: function(){
-        this._storage.removeItem(this._PROCESSING_PIPE_KEY);
+        this._storage.removeItem(this._JOB_PIPE_KEY);
         this._storage.removeItem(this._RESULT_PIPE_KEY);
         return this;
     },
 
-    _sliceProcessings: function(){
-        var processings = this._getProcessings();
-        this._storage.removeItem(this._PROCESSING_PIPE_KEY);
-        return processings;
+    _sliceJobs: function(){
+        var jobs = this._getJobs();
+        this._storage.removeItem(this._JOB_PIPE_KEY);
+        return jobs;
     },
 
-    _getProcessings: function(){
-        return JSON.parse(this._storage.getItem(this._PROCESSING_PIPE_KEY))
+    _getJobs: function(){
+        return JSON.parse(this._storage.getItem(this._JOB_PIPE_KEY))
     },
 
-    _setProcessings: function(processings){
-        this._storage.setItem(this._PROCESSING_PIPE_KEY, JSON.stringify(processings));
+    _setJobs: function(jobs){
+        this._storage.setItem(this._JOB_PIPE_KEY, JSON.stringify(jobs));
         return this;
     },
 
