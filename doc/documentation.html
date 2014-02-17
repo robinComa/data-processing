@@ -146,12 +146,17 @@
                             <td>Put a job set into a pipeline</td>
                         </tr>
                         <tr>
-                            <td>onResult(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
+                            <td>onResult(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn(&lt;<a href="http://www.w3schools.com/js/js_objects.asp">Object</a>&gt; result))</td>
                             <td>&lt;this&gt;</td>
                             <td>Triggered when a job result is receive</td>
                         </tr>
                         <tr>
-                            <td>onJob(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
+                            <td>onFinish(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&gt; results))</td>
+                            <td>&lt;this&gt;</td>
+                            <td>Triggered when all jobs are finished</td>
+                        </tr>
+                        <tr>
+                            <td>onJob(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn(&lt;<a href="#job">Job</a>&gt; job))</td>
                             <td>&lt;this&gt;</td>
                             <td>Triggered when a job is receive</td>
                         </tr>
@@ -381,6 +386,10 @@
         console.log('#pipe-memory-storage-console', result);
     });
 
+    pipe.onFinish(function(results){
+        console.log('#pipe-memory-storage-console', results);
+    });
+
     pipe.put(jobs);
 })();
 </script>
@@ -401,11 +410,16 @@
         job.run();
     });
 
-    pipe.put(jobs);
-
     pipe.onResult(function(result){
         console.log('#pipe-session-storage-console', result);
     });
+
+    pipe.onFinish(function(results){
+        console.log('#pipe-session-storage-console', results);
+    });
+
+    pipe.put(jobs);
+
 })();
 </script>
 
@@ -425,11 +439,16 @@
         job.run();
     });
 
-    pipe.put(jobs);
-
     pipe.onResult(function(result){
         console.log('#pipe-local-storage-console', result);
     });
+
+    pipe.onFinish(function(results){
+        console.log('#pipe-local-storage-console', results);
+    });
+
+    pipe.put(jobs);
+
 })();
 </script>
 

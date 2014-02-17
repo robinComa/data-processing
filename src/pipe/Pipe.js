@@ -12,6 +12,10 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
         throw 'Pipe : you should implement onResult function';
     },
 
+    onFinish: function(callback){
+        throw 'Pipe : you should implement onFinish function';
+    },
+
     onJob: function(callback){
         throw 'Pipe : you should implement onJob function';
     },
