@@ -36,7 +36,9 @@ describe('Class : SessionStoragePipe', function () {
             return;
         });
 
-        pipe.put([j, j, j]);
+        setTimeout(function(){
+            pipe.put([j, j, j]);
+        }, 100);
 
         pipe.onResult(callback);
 

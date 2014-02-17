@@ -22,7 +22,7 @@ DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
 
     onResult: function(callback){
         var $scope = this;
-        setInterval(function(){
+        this.onResultInterval = setInterval(function(){
             var results =  $scope._sliceResults();
             for (var i in results){
                 callback(results[i]);
@@ -33,7 +33,7 @@ DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
 
     onJob: function(callback){
         var $scope = this;
-        setInterval(function(){
+        this.onJobInterval = setInterval(function(){
             var jobs = $scope._sliceJobs();
             for(var i in jobs){
                 var job = DataProcessing.Util.unSerialize(jobs[i], DataProcessing.Job);
@@ -47,6 +47,8 @@ DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
     },
 
     clear: function(){
+        this.onResultInterval.clearInterval();
+        this.onJobInterval.clearInterval();
         this._storage.removeItem(this._JOB_PIPE_KEY);
         this._storage.removeItem(this._RESULT_PIPE_KEY);
         return this;

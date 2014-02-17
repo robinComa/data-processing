@@ -4,7 +4,6 @@ describe('Class : LocalStoragePipe', function () {
 
     var TIMEOUT = 500;
 
-
     it('LocalStoragePipe should return jobs', function () {
 
         var pipe = new DataProcessing.LocalStoragePipe();
@@ -36,7 +35,9 @@ describe('Class : LocalStoragePipe', function () {
             return;
         });
 
-        pipe.put([j, j, j]);
+        setTimeout(function(){
+            pipe.put([j, j, j]);
+        }, 100);
 
         pipe.onResult(callback);
 
