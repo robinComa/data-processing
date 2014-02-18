@@ -7,14 +7,12 @@ describe('Class : SessionStoragePipe', function () {
 
     it('SessionStoragePipe should return jobs', function () {
 
-        var pipe = new DataProcessing.SessionStoragePipe();
-
         var callback = jasmine.createSpy();
         var j = new DataProcessing.Job([], function(){
             return;
         });
 
-        pipe.put([j, j, j]);
+        var pipe = new DataProcessing.SessionStoragePipe([j, j, j]);
 
         pipe.onJob(callback);
 
@@ -29,17 +27,12 @@ describe('Class : SessionStoragePipe', function () {
 
     it('SessionStoragePipe should return results', function () {
 
-        var pipe = new DataProcessing.SessionStoragePipe();
-
         var callback = jasmine.createSpy();
         var j = new DataProcessing.Job([], function(){
             return;
         });
 
-        setTimeout(function(){
-            pipe.put([j, j, j]);
-        }, 100);
-
+        var pipe = new DataProcessing.SessionStoragePipe([j, j, j]);
         pipe.onResult(callback);
 
         pipe.onJob(function(job){

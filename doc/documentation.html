@@ -376,9 +376,9 @@
         }));
     }
 
-    var pipe = new DataProcessing.MemoryPipe();
+    var pipe = new DataProcessing.MemoryPipe(jobs);
 
-    pipe.onJob(function(jobs){
+    pipe.onJob(function(job){
         job.run();
     });
 
@@ -390,7 +390,6 @@
         console.log('#pipe-memory-storage-console', results);
     });
 
-    pipe.put(jobs);
 })();
 </script>
 
@@ -404,7 +403,7 @@
         }));
     }
 
-    var pipe = new DataProcessing.SessionStoragePipe();
+    var pipe = new DataProcessing.SessionStoragePipe(jobs);
 
     pipe.onJob(function(job){
         job.run();
@@ -417,8 +416,6 @@
     pipe.onFinish(function(results){
         console.log('#pipe-session-storage-console', results);
     });
-
-    pipe.put(jobs);
 
 })();
 </script>
@@ -433,7 +430,7 @@
         }));
     }
 
-    var pipe = new DataProcessing.LocalStoragePipe();
+    var pipe = new DataProcessing.LocalStoragePipe(jobs);
 
     pipe.onJob(function(job){
         job.run();
@@ -446,8 +443,6 @@
     pipe.onFinish(function(results){
         console.log('#pipe-local-storage-console', results);
     });
-
-    pipe.put(jobs);
 
 })();
 </script>

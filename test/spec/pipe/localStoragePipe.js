@@ -6,14 +6,12 @@ describe('Class : LocalStoragePipe', function () {
 
     it('LocalStoragePipe should return jobs', function () {
 
-        var pipe = new DataProcessing.LocalStoragePipe();
-
         var callback = jasmine.createSpy();
         var j = new DataProcessing.Job([], function(){
             return;
         });
 
-        pipe.put([j, j, j]);
+        var pipe = new DataProcessing.LocalStoragePipe([j, j, j]);
 
         pipe.onJob(callback);
 
@@ -28,17 +26,12 @@ describe('Class : LocalStoragePipe', function () {
 
     it('LocalStoragePipe should return results', function () {
 
-        var pipe = new DataProcessing.LocalStoragePipe();
-
         var callback = jasmine.createSpy();
         var j = new DataProcessing.Job([], function(){
             return;
         });
 
-        setTimeout(function(){
-            pipe.put([j, j, j]);
-        }, 100);
-
+        var pipe = new DataProcessing.LocalStoragePipe([j, j, j]);
         pipe.onResult(callback);
 
         pipe.onJob(function(job){

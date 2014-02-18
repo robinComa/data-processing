@@ -7,14 +7,12 @@ describe('Class : MemoryPipe', function () {
 
     it('MemoryPipe should return jobs', function () {
 
-        var pipe = new DataProcessing.MemoryPipe();
-
         var callback = jasmine.createSpy();
         var j = new DataProcessing.Job([], function(){
             return;
         });
 
-        pipe.put([j, j, j]);
+        var pipe = new DataProcessing.MemoryPipe([j, j, j]);
 
         pipe.onJob(callback);
 
@@ -29,14 +27,12 @@ describe('Class : MemoryPipe', function () {
 
     it('MemoryPipe should return results', function () {
 
-        var pipe = new DataProcessing.MemoryPipe();
-
         var callback = jasmine.createSpy();
         var j = new DataProcessing.Job([], function(){
             return;
         });
 
-        pipe.put([j, j, j]);
+        var pipe = new DataProcessing.MemoryPipe([j, j, j]);
 
         pipe.onResult(callback);
 
