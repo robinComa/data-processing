@@ -93,7 +93,7 @@ DataProcessing.Util = {
     unSerialize: function(serializedObj, objClass){
         var obj = eval('(' + atob(serializedObj) + ')');
 
-        if(objClass === DataProcessing.Processing){
+        if(objClass === DataProcessing.Job){
             return new objClass(obj.args, obj.fn);
         }
 
@@ -224,22 +224,79 @@ DataProcessing.Class.addInitHook = function (fn) { // (Function) || (String, arg
 
 DataProcessing.Pipe = DataProcessing.Class.extend({
 
-    _id: DataProcessing.Util.guid(),
+    JOB_PIPE_KEY: 'DATA_PROCESSING : JOB PIPE',
+    RESULT_PIPE_KEY: 'DATA_PROCESSING : RESULT PIPE',
+    INTERVAL_JOB: 100,
+    INTERVAL_RESULT: 100,
 
-    put: function(processings){
-        throw 'Pipe : you should implement put function';
+    initialize: function (jobs) {
+        this._id = DataProcessing.Util.guid();
+        this._results = [];
+        this._results_length_target = jobs.length;
+        this._pushJobs(jobs);
+        return this;
     },
 
     onResult: function(callback){
-        throw 'Pipe : you should implement onResult function';
+        var $scope = this;
+        this.onResultInterval = setInterval(function(){
+            var results = $scope._sliceResults();
+            for(var i in results){
+                $scope._results.push(results[i]);
+                callback(results[i]);
+                if($scope._results.length === $scope._results_length_target){
+                    $scope.onFinish($scope._results);
+                    $scope.clear();
+                }
+            }
+        }, this.INTERVAL_RESULT);
+        return this;
     },
 
-    onProcessing: function(callback){
-        throw 'Pipe : you should implement onProcessing function';
+    onFinish: function(callback){
+        this.onFinish = callback;
+        return this;
+    },
+
+    onJob: function(callback){
+        var $scope = this;
+        this.onJobInterval = setInterval(function(){
+            var jobs = $scope._sliceJob();
+            for (var i in jobs){
+                jobs[i].onFinish(function(result){
+                    $scope._pushResult(result)
+                });
+                callback(jobs[i]);
+            }
+        }, this.INTERVAL_JOB);
+        return this;
     },
 
     clear: function(){
-        throw 'Pipe : you should implement clear function';
+        if(this._clear){
+            this._clear();
+            this._results = [];
+            clearInterval(this.onResultInterval);
+            clearInterval(this.onJobInterval);
+        }else{
+            throw 'Pipe : you should implement _clear function';
+        }
+    },
+
+    _pushJobs: function(jobs){
+        throw 'Pipe : you should implement _pushJobs function';
+    },
+
+    _sliceJob: function(){
+        throw 'Pipe : you should implement _sliceJob function';
+    },
+
+    _pushResult: function(result){
+        throw 'Pipe : you should implement _pushResult function';
+    },
+
+    _sliceResults: function(){
+        throw 'Pipe : you should implement _sliceResults function';
     }
 
 });
@@ -247,53 +304,38 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
 
 DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
-    _processings: [],
+    _clear: function(){
+        delete DataProcessing.MemoryPipe[this.JOB_PIPE_KEY];
+        delete DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY];
+        return this;
+    },
 
-    initialize: function () {
-        if(!this._getProcessings()){
-            this._setProcessings([]);
+    _pushJobs: function(jobs){
+        if(!DataProcessing.MemoryPipe[this.JOB_PIPE_KEY]){
+            DataProcessing.MemoryPipe[this.JOB_PIPE_KEY] = [];
         }
+        DataProcessing.MemoryPipe[this.JOB_PIPE_KEY] = DataProcessing.MemoryPipe[this.JOB_PIPE_KEY].concat(jobs);
         return this;
     },
 
-    put: function(processings){
-        this._setProcessings(processings.concat(this._getProcessings()));
-        return this;
-    },
-
-    onResult: function(callback){
-        DataProcessing.MemoryPipe.ON_RESULTS = callback;
-        return this;
-    },
-
-    onProcessing: function(callback){
-        var processings = this._sliceProcessing();
-        for(var i in processings){
-            var processing = processings[i];
-            processing.onFinish(DataProcessing.MemoryPipe.ON_RESULTS);
-            callback(processing);
+    _sliceJob: function(){
+        var jobs = [];
+        var MAX = 2;
+        for(var i = 0; i < MAX && DataProcessing.MemoryPipe[this.JOB_PIPE_KEY].length > 0; i++){
+            jobs.push(DataProcessing.MemoryPipe[this.JOB_PIPE_KEY].pop());
         }
+        return jobs;
+    },
+
+    _pushResult: function(result){
+        DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY].push(result);
         return this;
     },
 
-    clear: function(){
-        this._setProcessings([]);
-        return this;
-    },
-
-    _getProcessings: function(){
-        return DataProcessing.MemoryPipe.PIPE;
-    },
-
-    _setProcessings: function(processings){
-        DataProcessing.MemoryPipe.PIPE = processings;
-        return this;
-    },
-
-    _sliceProcessing: function(){
-        var processings = this._getProcessings();
-        this.clear();
-        return processings;
+    _sliceResults: function(){
+        var results = DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY];
+        DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY] = [];
+        return results;
     }
 
 });
@@ -301,90 +343,46 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
 DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
 
-    _PROCESSING_PIPE_KEY: 'DATA_PROCESSING : PROCESSING PIPE',
-    _RESULT_PIPE_KEY: 'DATA_PROCESSING : RESULT PIPE',
-    _INTERVAL_PROCESSING: 100,
-    _INTERVAL_RESULT: 100,
+    _clear: function(){
+        this._getStorage().removeItem(this.JOB_PIPE_KEY);
+        this._getStorage().removeItem(this.RESULT_PIPE_KEY);
+        return this;
+    },
 
-    put: function(processings){
-        var processingsQueue = this._getProcessings();
+    _getStorage: function(){
+        throw 'Pipe : you should implement getStorage function';
+    },
 
-        if(processingsQueue === null){
-            processingsQueue = [];
+    _pushJobs: function(jobs){
+        var jobsSerialized = JSON.parse(this._getStorage().getItem(this.JOB_PIPE_KEY)) || [];
+        for(var i in jobs){
+            jobsSerialized.push(jobs[i].serialize());
         }
-        for(var i in processings){
-            processingsQueue.push(processings[i].serialize());
+        this._getStorage().setItem(this.JOB_PIPE_KEY, JSON.stringify(jobsSerialized));
+        return this;
+    },
+
+    _sliceJob: function(){
+        var jobsSerialized = JSON.parse(this._getStorage().getItem(this.JOB_PIPE_KEY)) || [];
+        var jobs = [];
+        for(var i in jobsSerialized){
+            jobs.push(DataProcessing.Util.unSerialize(jobsSerialized[i], DataProcessing.Job));
         }
-        this._setProcessings(processingsQueue);
-        return this;
-    },
-
-    onResult: function(callback){
-        var $scope = this;
-        setInterval(function(){
-            var results =  $scope._sliceResults();
-            for (var i in results){
-                callback(results[i]);
-            }
-        }, this._INTERVAL_RESULT);
-        return this;
-    },
-
-    onProcessing: function(callback){
-        var $scope = this;
-        setInterval(function(){
-            var processings = $scope._sliceProcessings();
-            for(var i in processings){
-                var processing = DataProcessing.Util.unSerialize(processings[i], DataProcessing.Processing);
-                processing.onFinish(function(results){
-                    $scope._pushResult(results);
-                });
-                callback(processing);
-            }
-        }, this.INTERVAL_PROCESSING);
-        return this;
-    },
-
-    clear: function(){
-        this._storage.removeItem(this._PROCESSING_PIPE_KEY);
-        this._storage.removeItem(this._RESULT_PIPE_KEY);
-        return this;
-    },
-
-    _sliceProcessings: function(){
-        var processings = this._getProcessings();
-        this._storage.removeItem(this._PROCESSING_PIPE_KEY);
-        return processings;
-    },
-
-    _getProcessings: function(){
-        return JSON.parse(this._storage.getItem(this._PROCESSING_PIPE_KEY))
-    },
-
-    _setProcessings: function(processings){
-        this._storage.setItem(this._PROCESSING_PIPE_KEY, JSON.stringify(processings));
-        return this;
-    },
-
-    _getResults: function(){
-        var results = JSON.parse(this._storage.getItem(this._RESULT_PIPE_KEY));
-        return results ? results : [];
-    },
-
-    _setResults: function(results){
-        this._storage.setItem(this._RESULT_PIPE_KEY, JSON.stringify(results));
-    },
-
-    _sliceResults: function(){
-        var results = this._getResults();
-        this._storage.removeItem(this._RESULT_PIPE_KEY);
-        return results;
+        this._getStorage().removeItem(this.JOB_PIPE_KEY);
+        return jobs;
     },
 
     _pushResult: function(result){
-        var results = this._getResults();
+        var results = JSON.parse(this._getStorage().getItem(this.RESULT_PIPE_KEY)) || [];
         results.push(result);
-        this._setResults(results);
+        this._getStorage().setItem(this.RESULT_PIPE_KEY, JSON.stringify(results));
+        return this;
+    },
+
+    _sliceResults: function(){
+        var results = JSON.parse(this._getStorage().getItem(this.RESULT_PIPE_KEY)) || [];
+        this._getStorage().removeItem(this.RESULT_PIPE_KEY);
+        return results
     }
 
 });
@@ -392,9 +390,8 @@ DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
 
 DataProcessing.LocalStoragePipe = DataProcessing.StoragePipe.extend({
 
-    initialize: function () {
-        this._storage = window.localStorage;
-        return this;
+    _getStorage: function(){
+        return window.localStorage;
     }
 
 });
@@ -402,15 +399,14 @@ DataProcessing.LocalStoragePipe = DataProcessing.StoragePipe.extend({
 
 DataProcessing.SessionStoragePipe = DataProcessing.StoragePipe.extend({
 
-    initialize: function () {
-        this._storage = window.sessionStorage;
-        return this;
+    _getStorage: function(){
+        return window.sessionStorage;
     }
 
 });
 'use strict';
 
-DataProcessing.Processing = DataProcessing.Class.extend({
+DataProcessing.Job = DataProcessing.Class.extend({
 
     initialize: function (args, fn) {
         this.args = args;
