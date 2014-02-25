@@ -1,0 +1,111 @@
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.header{
+    padding-left: 15px;
+    padding-right: 15px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+    padding-bottom: 19px;
+
+}
+@media (min-width: 768px) {
+    .container {
+        max-width: 730px;
+    }
+    .header{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .header {
+        margin-bottom: 30px;
+    }
+}
+h1{
+    font-weight: bold;
+    border-left: 4px solid #47a447;
+    padding: 0px 0px 0px 10px;
+}
+h2{
+    font-weight: bold;
+    border-left: 2px solid #47a447;
+    padding: 0px 0px 0px 12px;
+}
+h1, h2, h3{
+    color: #428bca;
+}
+
+section{
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 100px;
+}
+
+article{
+    padding-top: 30px;
+}
+
+table{
+    font-size: 12px;
+}
+
+pre{
+    background-color: white;
+    margin: 0px;
+    padding: 0px;
+    font-size: 0.8em;
+    line-height: 1em;
+}
+code.console{
+    color: #428bca;
+    font-weight: bold;
+}
+
+/** TOC */
+ul#toc{
+    padding: 0px;
+    list-style-type: none;
+}
+ul#toc li > a{
+    color: #999;
+}
+ul#toc li.active > a{
+    color: #428bca;
+    font-weight: bold;
+    border-left: 2px solid #47a447;
+}
+ul#toc > li > a{
+    padding: 5px 0px 0px 5px;
+    font-size: 18px;
+    height: 30px;
+    display: block;
+}
+ul#toc > li.active > a{
+    padding: 5px 0px 0px 3px;
+}
+ul#toc > li > ul{
+    padding: 0px;
+    display: none;
+}
+ul#toc > li.active > ul{
+    display: block;
+}
+ul#toc > li > ul > li{
+    padding: 0px 0px 0px 0px;
+    list-style-type: none;
+}
+ul#toc > li.active > ul > li > a{
+    padding: 0px 0px 0px 10px;
+    display: block;
+}
+ul#toc > li.active > ul > li.active > a{
+    padding: 0px 0px 0px 8px;
+}
+/** END OF TOC */
+

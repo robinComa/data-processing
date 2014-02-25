@@ -53,6 +53,7 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
     clear: function(){
         if(this._clear){
             this._clear();
+            this._results = [];
             clearInterval(this.onResultInterval);
             clearInterval(this.onJobInterval);
         }else{

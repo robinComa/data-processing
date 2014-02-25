@@ -101,9 +101,20 @@ module.exports = function(grunt) {
                 configFile: 'karma.conf.js',
                 singleRun: true
             }
-        }
+        },
 
         /** END OF Test */
+
+        /** GIT */
+
+        'gh-pages': {
+            options: {
+                base: 'dist'
+            },
+            src: ['**']
+        }
+
+        /** END OF GIT */
 
     });
 
@@ -120,7 +131,8 @@ module.exports = function(grunt) {
         'useminPrepare',
         'concat',
         'copy:dist',
-        'usemin'
+        'usemin',
+        'gh-pages'
     ]);
 
     grunt.registerTask('test',[
