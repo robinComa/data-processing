@@ -129,6 +129,23 @@
                         All pipes objects extend this Pipe interface.
                     </p>
 
+                    <h3>Creation</h3>
+
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Constructor</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>new DataProcessing.Pipe(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&lt;<a href="#job">Job</a>&gt;&gt; jobs)</td>
+                            <td>Instantiates a Pipe object with a set of Job</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
                     <h3>Methods</h3>
 
                     <table class="table table-condensed table-striped">
@@ -140,11 +157,6 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>put(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&lt;<a href="#job">Job</a>&gt;&gt; job)</td>
-                            <td>&lt;this&gt;</td>
-                            <td>Put a job set into a pipeline</td>
-                        </tr>
                         <tr>
                             <td>onResult(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn(&lt;<a href="http://www.w3schools.com/js/js_objects.asp">Object</a>&gt; result))</td>
                             <td>&lt;this&gt;</td>
@@ -189,8 +201,8 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>new DataProcessing.MemoryPipe()</td>
-                            <td>Instantiates a MemoryPipe object</td>
+                            <td>new DataProcessing.MemoryPipe(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&lt;<a href="#job">Job</a>&gt;&gt; jobs)</td>
+                            <td>Instantiates a in memory Pipe object with a set of Job</td>
                         </tr>
                         </tbody>
                     </table>
@@ -219,8 +231,8 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>new DataProcessing.SessionStoragePipe()</td>
-                            <td>Instantiates a MemoryPipe object</td>
+                            <td>new DataProcessing.SessionStoragePipe(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&lt;<a href="#job">Job</a>&gt;&gt; jobs)</td>
+                            <td>Instantiates a SessionStoragePipe object with a set of Job</td>
                         </tr>
                         </tbody>
                     </table>
@@ -249,8 +261,8 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>new DataProcessing.LocalStoragePipe()</td>
-                            <td>Instantiates a MemoryPipe object</td>
+                            <td>new DataProcessing.LocalStoragePipe(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&lt;<a href="#job">Job</a>&gt;&gt; jobs)</td>
+                            <td>Instantiates a LocalStoragePipe object with a set of Job</td>>
                         </tr>
                         </tbody>
                     </table>
