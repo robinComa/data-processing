@@ -116,9 +116,22 @@ module.exports = function(grunt) {
 
         'gh-pages': {
             options: {
-                base: 'dist'
+
             },
-            src: ['**']
+            'doc': {
+                options: {
+                    base: 'dist',
+                    branch: 'gh-pages'
+                },
+                src: ['**']
+            },
+            'dist': {
+                options: {
+                    base: 'dist',
+                    branch: 'master'
+                },
+                src: ['*']
+            }
         }
 
         /** END OF GIT */
@@ -140,7 +153,8 @@ module.exports = function(grunt) {
         'concat',
         'copy:dist',
         'usemin',
-        'gh-pages'
+        'gh-pages:doc',
+        'gh-pages:dist'
     ]);
 
     grunt.registerTask('test',[
