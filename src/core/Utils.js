@@ -48,7 +48,8 @@ DataProcessing.Util = {
         if(typeof(Blob) === typeof(Function)){
             return new window.Blob(args, option);
         }else{
-            var bb = new(window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder)();
+            var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
+            var bb = new BlobBuilder();
             bb.append(args);
             return bb.getBlob(option.type);
         }
@@ -57,11 +58,13 @@ DataProcessing.Util = {
     // URL cross browser
     URL: window.URL || window.webkitURL,
 
-    unSerialize: function(serializedObj, objClass){
+    unSerialize: function(serializedObj, ObjClass){
+        /*jslint evil: true */
         var obj = eval('(' + atob(serializedObj) + ')');
+        /*jslint evil: false */
 
-        if(objClass === DataProcessing.Job){
-            return new objClass(obj.args, obj.fn);
+        if(ObjClass === DataProcessing.Job){
+            return new ObjClass(obj.args, obj.fn);
         }
 
         throw 'unSerialize ERROR : Unsupported class.';
@@ -71,7 +74,7 @@ DataProcessing.Util = {
         function S4() {
             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
         }
-        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+        return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
     }
 };
 

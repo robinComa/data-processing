@@ -94,7 +94,14 @@ module.exports = function(grunt) {
 
         /** END OF Dist */
 
-        /** Test */
+        /** Quality */
+
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc'
+            },
+            all: ['src/**/*.js']
+        },
 
         karma: {
             unit: {
@@ -103,7 +110,7 @@ module.exports = function(grunt) {
             }
         },
 
-        /** END OF Test */
+        /** END OF Quality */
 
         /** GIT */
 
@@ -126,8 +133,9 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('dist',[
-        'clean:dist',
+        'jshint',
         'karma:unit',
+        'clean:dist',
         'useminPrepare',
         'concat',
         'copy:dist',

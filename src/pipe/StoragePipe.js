@@ -41,7 +41,7 @@ DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
     _sliceResults: function(){
         var results = JSON.parse(this._getStorage().getItem(this.RESULT_PIPE_KEY)) || [];
         this._getStorage().removeItem(this.RESULT_PIPE_KEY);
-        return results
+        return results;
     }
 
 });

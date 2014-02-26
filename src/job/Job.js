@@ -40,8 +40,8 @@ DataProcessing.Job = DataProcessing.Class.extend({
         }
         var code =
             this._workerScaffolding.toString()
-            .replace('\'__fn__\'', this.fn)
-            .replace('\'__args__\'', args);
+                .replace('\'__fn__\'', this.fn)
+                .replace('\'__args__\'', args);
         return [
             '(',
             code,
@@ -61,7 +61,10 @@ DataProcessing.Job = DataProcessing.Class.extend({
                     request.open('GET', url, false);  // `false` makes the request synchronous
                     request.send(null);
                     if (request.status === 200) {
-                        return eval('(' + request.responseText + ')');
+                        /*jslint evil: true */
+                        var response = eval('(' + request.responseText + ')');
+                        /*jslint evil: false */
+                        return response;
                     }
                 }
             };

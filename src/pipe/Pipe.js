@@ -8,10 +8,14 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
     INTERVAL_RESULT: 100,
 
     initialize: function (jobs) {
-        this._id = DataProcessing.Util.guid();
+        var id = this._id = DataProcessing.Util.guid();
         this._results = [];
-        this._results_length_target = jobs.length;
-        this._pushJobs(jobs);
+        this._resultsLengthTarget = jobs.length;
+        this._initialize();
+        this._pushJobs(jobs.map(function(job){
+            job._pipeId = id;
+            return job;
+        }));
         return this;
     },
 
@@ -22,7 +26,7 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
             for(var i in results){
                 $scope._results.push(results[i]);
                 callback(results[i]);
-                if($scope._results.length === $scope._results_length_target){
+                if($scope._results.length === $scope._resultsLengthTarget){
                     $scope.onFinish($scope._results);
                     $scope.clear();
                 }
@@ -40,10 +44,12 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
         var $scope = this;
         this.onJobInterval = setInterval(function(){
             var jobs = $scope._sliceJob();
+            var onFinish = function(result){
+                $scope._pushResult(pipeId, result);
+            };
             for (var i in jobs){
-                jobs[i].onFinish(function(result){
-                    $scope._pushResult(result)
-                });
+                var pipeId = jobs[i]._pipeId;
+                jobs[i].onFinish(onFinish);
                 callback(jobs[i]);
             }
         }, this.INTERVAL_JOB);
@@ -61,8 +67,12 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
         }
     },
 
+    _initialize: function(){
+        //throw 'Pipe : you should implement _initialize function';
+    },
+
     _pushJobs: function(jobs){
-        throw 'Pipe : you should implement _pushJobs function';
+        throw 'Pipe : you should implement _pushJobs function with jobs arg : ' + jobs.toString();
     },
 
     _sliceJob: function(){
@@ -70,7 +80,7 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
     },
 
     _pushResult: function(result){
-        throw 'Pipe : you should implement _pushResult function';
+        throw 'Pipe : you should implement _pushResult function with result arg : ' + result.toString();
     },
 
     _sliceResults: function(){

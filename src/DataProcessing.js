@@ -18,12 +18,6 @@ function expose() {
 // define DataProcessing for Node module pattern loaders, including Browserify
 if (typeof module === 'object' && typeof module.exports === 'object') {
     module.exports = DataProcessing;
-
-// define DataProcessing as an AMD module
-} else if (typeof define === 'function' && define.amd) {
-    define(DataProcessing);
-
-// define DataProcessing as a global L variable, saving the original L to restore later if needed
-} else {
+} else {// define DataProcessing as a global L variable, saving the original L to restore later if needed
     expose();
 }

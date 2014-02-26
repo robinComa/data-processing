@@ -30,6 +30,7 @@ DataProcessing.Class.extend = function (props) {
 
     // jshint camelcase: false
     var parentProto = NewClass.__super__ = this.prototype;
+    // jshint camelcase: true
 
     var proto = DataProcessing.Util.create(parentProto);
     proto.constructor = NewClass;
