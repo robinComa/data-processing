@@ -11,7 +11,6 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
         var id = this._id = DataProcessing.Util.guid();
         this._results = [];
         this._resultsLengthTarget = jobs.length;
-        this._initialize();
         this._pushJobs(jobs.map(function(job){
             job._pipeId = id;
             return job;
@@ -65,10 +64,6 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
         }else{
             throw 'Pipe : you should implement _clear function';
         }
-    },
-
-    _initialize: function(){
-        //throw 'Pipe : you should implement _initialize function';
     },
 
     _pushJobs: function(jobs){

@@ -2,12 +2,6 @@
 
 DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
-    _initialize: function(){
-        if(!DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY]){
-            DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY] = [];
-        }
-    },
-
     _clear: function(){
         //delete DataProcessing.MemoryPipe[this.JOB_PIPE_KEY];
         delete DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY][this._id];
@@ -37,6 +31,9 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
     },
 
     _sliceResults: function(){
+        if(!DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY]){
+            DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY] = [];
+        }
         var results = DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY][this._id];
         DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY][this._id] = [];
         return results;
