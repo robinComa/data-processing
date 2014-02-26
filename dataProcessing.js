@@ -22,13 +22,7 @@ function expose() {
 // define DataProcessing for Node module pattern loaders, including Browserify
 if (typeof module === 'object' && typeof module.exports === 'object') {
     module.exports = DataProcessing;
-
-// define DataProcessing as an AMD module
-} else if (typeof define === 'function' && define.amd) {
-    define(DataProcessing);
-
-// define DataProcessing as a global L variable, saving the original L to restore later if needed
-} else {
+} else {// define DataProcessing as a global L variable, saving the original L to restore later if needed
     expose();
 }
 'use strict';
@@ -81,7 +75,8 @@ DataProcessing.Util = {
         if(typeof(Blob) === typeof(Function)){
             return new window.Blob(args, option);
         }else{
-            var bb = new(window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder)();
+            var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
+            var bb = new BlobBuilder();
             bb.append(args);
             return bb.getBlob(option.type);
         }
@@ -90,11 +85,13 @@ DataProcessing.Util = {
     // URL cross browser
     URL: window.URL || window.webkitURL,
 
-    unSerialize: function(serializedObj, objClass){
+    unSerialize: function(serializedObj, ObjClass){
+        /*jslint evil: true */
         var obj = eval('(' + atob(serializedObj) + ')');
+        /*jslint evil: false */
 
-        if(objClass === DataProcessing.Job){
-            return new objClass(obj.args, obj.fn);
+        if(ObjClass === DataProcessing.Job){
+            return new ObjClass(obj.args, obj.fn);
         }
 
         throw 'unSerialize ERROR : Unsupported class.';
@@ -104,7 +101,7 @@ DataProcessing.Util = {
         function S4() {
             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
         }
-        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+        return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
     }
 };
 
@@ -144,6 +141,7 @@ DataProcessing.Class.extend = function (props) {
 
     // jshint camelcase: false
     var parentProto = NewClass.__super__ = this.prototype;
+    // jshint camelcase: true
 
     var proto = DataProcessing.Util.create(parentProto);
     proto.constructor = NewClass;
@@ -230,10 +228,13 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
     INTERVAL_RESULT: 100,
 
     initialize: function (jobs) {
-        this._id = DataProcessing.Util.guid();
+        var id = this._id = DataProcessing.Util.guid();
         this._results = [];
-        this._results_length_target = jobs.length;
-        this._pushJobs(jobs);
+        this._resultsLengthTarget = jobs.length;
+        this._pushJobs(jobs.map(function(job){
+            job._pipeId = id;
+            return job;
+        }));
         return this;
     },
 
@@ -244,7 +245,7 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
             for(var i in results){
                 $scope._results.push(results[i]);
                 callback(results[i]);
-                if($scope._results.length === $scope._results_length_target){
+                if($scope._results.length === $scope._resultsLengthTarget){
                     $scope.onFinish($scope._results);
                     $scope.clear();
                 }
@@ -262,10 +263,12 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
         var $scope = this;
         this.onJobInterval = setInterval(function(){
             var jobs = $scope._sliceJob();
+            var onFinish = function(result){
+                $scope._pushResult(pipeId, result);
+            };
             for (var i in jobs){
-                jobs[i].onFinish(function(result){
-                    $scope._pushResult(result)
-                });
+                var pipeId = jobs[i]._pipeId;
+                jobs[i].onFinish(onFinish);
                 callback(jobs[i]);
             }
         }, this.INTERVAL_JOB);
@@ -284,7 +287,7 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
     },
 
     _pushJobs: function(jobs){
-        throw 'Pipe : you should implement _pushJobs function';
+        throw 'Pipe : you should implement _pushJobs function with jobs arg : ' + jobs.toString();
     },
 
     _sliceJob: function(){
@@ -292,7 +295,7 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
     },
 
     _pushResult: function(result){
-        throw 'Pipe : you should implement _pushResult function';
+        throw 'Pipe : you should implement _pushResult function with result arg : ' + result.toString();
     },
 
     _sliceResults: function(){
@@ -305,8 +308,8 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
 DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
     _clear: function(){
-        delete DataProcessing.MemoryPipe[this.JOB_PIPE_KEY];
-        delete DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY];
+        //delete DataProcessing.MemoryPipe[this.JOB_PIPE_KEY];
+        delete DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY][this._id];
         return this;
     },
 
@@ -327,14 +330,17 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
         return jobs;
     },
 
-    _pushResult: function(result){
-        DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY].push(result);
+    _pushResult: function(pipeId, result){
+        DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY][pipeId].push(result);
         return this;
     },
 
     _sliceResults: function(){
-        var results = DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY];
-        DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY] = [];
+        if(!DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY]){
+            DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY] = [];
+        }
+        var results = DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY][this._id];
+        DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY][this._id] = [];
         return results;
     }
 
@@ -382,7 +388,7 @@ DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
     _sliceResults: function(){
         var results = JSON.parse(this._getStorage().getItem(this.RESULT_PIPE_KEY)) || [];
         this._getStorage().removeItem(this.RESULT_PIPE_KEY);
-        return results
+        return results;
     }
 
 });
@@ -446,8 +452,8 @@ DataProcessing.Job = DataProcessing.Class.extend({
         }
         var code =
             this._workerScaffolding.toString()
-            .replace('\'__fn__\'', this.fn)
-            .replace('\'__args__\'', args);
+                .replace('\'__fn__\'', this.fn)
+                .replace('\'__args__\'', args);
         return [
             '(',
             code,
@@ -467,7 +473,10 @@ DataProcessing.Job = DataProcessing.Class.extend({
                     request.open('GET', url, false);  // `false` makes the request synchronous
                     request.send(null);
                     if (request.status === 200) {
-                        return eval('(' + request.responseText + ')');
+                        /*jslint evil: true */
+                        var response = eval('(' + request.responseText + ')');
+                        /*jslint evil: false */
+                        return response;
                     }
                 }
             };

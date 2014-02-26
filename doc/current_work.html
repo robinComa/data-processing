@@ -24,11 +24,11 @@
         });
 
         pipe.onResult(function(result){
-            console.log('#pipe-memory-storage-console', result);
+            console.log(pipe._id, 'onResult', result);
         });
 
         pipe.onFinish(function(results){
-            console.log('#pipe-memory-storage-console', results);
+            console.log(pipe._id, 'onFinish', results);
         });
 
     })();
@@ -41,18 +41,18 @@
             }));
         }
 
-        var pipe = new DataProcessing.LocalStoragePipe(jobs);
+        var pipe = new DataProcessing.MemoryPipe(jobs);
 
         pipe.onJob(function(job){
             job.run();
         });
 
         pipe.onResult(function(result){
-            console.log('#pipe-local-storage-console', result);
+            console.log(pipe._id, 'onResult', result);
         });
 
         pipe.onFinish(function(results){
-            console.log('#pipe-local-storage-console', results);
+            console.log(pipe._id, 'onFinish', results);
         });
 
     })();
