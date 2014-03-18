@@ -41,7 +41,7 @@ describe('Class : MemoryPipe', function () {
         });
 
         waitsFor(function() {
-            return callback.callCount === 3;
+            return callback.callCount > 0;
         }, 'The Worker end timed out.', TIMEOUT);
 
         runs(function() {

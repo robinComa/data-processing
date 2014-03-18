@@ -28,7 +28,7 @@
             }));
         }
 
-        var pipe = new DataProcessing.SessionStoragePipe(jobs);
+        var pipe = new DataProcessing.MemoryPipe(jobs);
 
         pipe.onJob(function(job){
             job.run();
@@ -52,7 +52,7 @@
             }));
         }
 
-        var pipe = new DataProcessing.LocalStoragePipe(jobs);
+        var pipe = new DataProcessing.MemoryPipe(jobs);
 
         pipe.onJob(function(job){
             job.run();
