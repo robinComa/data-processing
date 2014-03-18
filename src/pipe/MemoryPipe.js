@@ -3,7 +3,6 @@
 DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
     _clear: function(){
-        //delete DataProcessing.MemoryPipe[this.JOB_PIPE_KEY];
         delete DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY][this._id];
         return this;
     },

@@ -46,7 +46,7 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
             var onFinish = function(pipeId){
                 return function(result){
                     $scope._pushResult(pipeId, result);
-                }
+                };
             };
             for (var i in jobs){
                 var pipeId = jobs[i]._pipeId;
