@@ -43,12 +43,14 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
         var $scope = this;
         this.onJobInterval = setInterval(function(){
             var jobs = $scope._sliceJob();
-            var onFinish = function(result){
-                $scope._pushResult(pipeId, result);
+            var onFinish = function(pipeId){
+                return function(result){
+                    $scope._pushResult(pipeId, result);
+                }
             };
             for (var i in jobs){
                 var pipeId = jobs[i]._pipeId;
-                jobs[i].onFinish(onFinish);
+                jobs[i].onFinish(onFinish(pipeId));
                 callback(jobs[i]);
             }
         }, this.INTERVAL_JOB);
