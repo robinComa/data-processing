@@ -3,32 +3,37 @@
 DataProcessing.CloudPipe = DataProcessing.Pipe.extend({
 
     _clear: function(){
-        this.jobRef.remove();//TODO remove on check
-        this.resultRef.child(this._id).remove();
+        this.RESULT_PIPE_KEY.child(this._id).remove();
         return this;
     },
 
     _pushJobs: function(jobs){
-
-        this.jobRef = new Firebase('https://cloud-map-reduce-jobs-pipe.firebaseio.com/');
         var $scope = this;
-        this.jobRef.on('value', function(snapshot) {
-            var values = snapshot.val();
-            for(var i in values){
-                $scope._jobs.push(values[i]);
-            }
-        });
-        this.resultRef = new Firebase('https://cloud-map-reduce-jobs-results.firebaseio.com/');
-        this.resultRef.child(this._id).on('value', function(snapshot) {
-            var values = snapshot.val();
-            for(var i in values){
-                $scope._results.push(values[i]);
-            }
-        });
+        $scope._jobs = [];
+        $scope._results = [];
 
-        for(var i in jobs){
-            this.jobRef.push(jobs[i].serialize());
+        if(typeof Firebase === "undefined"){
+            var script = document.createElement('script');
+            script.onload = function() {
+                $scope.JOB_PIPE_KEY = new Firebase('https://cloud-map-reduce-jobs-pipe.firebaseio.com/');
+                $scope.RESULT_PIPE_KEY = new Firebase('https://cloud-map-reduce-jobs-results.firebaseio.com/');
+
+                $scope.JOB_PIPE_KEY.on('child_added', function(snapshot) {
+                    $scope._jobs.push(snapshot.val());
+                    snapshot.ref().remove();
+                });
+                $scope.RESULT_PIPE_KEY.child($scope._id).on('child_added', function(snapshot) {
+                    $scope._results.push(snapshot.val());
+                });
+
+                for(var i in jobs){
+                    $scope.JOB_PIPE_KEY.push(jobs[i].serialize());
+                }
+            };
+            script.src = 'https://cdn.firebase.com/js/client/1.0.6/firebase.js';
+            document.getElementsByTagName('head')[0].appendChild(script);
         }
+
         return this;
     },
 
@@ -43,7 +48,7 @@ DataProcessing.CloudPipe = DataProcessing.Pipe.extend({
     },
 
     _pushResult: function(pipeId, result){
-        this.resultRef.child(this._id).push(result); //TODO pipeId & StoragePipe
+        this.RESULT_PIPE_KEY.child(pipeId).push(result);
         return this;
     },
 

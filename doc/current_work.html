@@ -5,8 +5,6 @@
 
 <body>
 
-<script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
-
 <!-- build:js ../dataProcessing.js -->
 <script src="../src/copyright.js"></script>
 <script src="../src/DataProcessing.js"></script>
@@ -22,6 +20,30 @@
 <!-- endbuild -->
 
 <script>
+    (function(){
+        var texts = ['A piece of text', 'A piece of text...', 'A piece of text!'];
+        var jobs = [];
+        for(var i in texts){
+            jobs.push(new DataProcessing.Job([texts[i]], function(text){
+                return text.length;
+            }));
+        }
+
+        var pipe = new DataProcessing.CloudPipe(jobs);
+
+        pipe.onJob(function(job){
+            job.run();
+        });
+
+        pipe.onResult(function(result){
+            console.log(pipe._id, 'onResult', result);
+        });
+
+        pipe.onFinish(function(results){
+            console.log(pipe._id, 'onFinish', results);
+        });
+
+    })();
     (function(){
         var texts = ['A piece of text', 'A piece of text...', 'A piece of text!'];
         var jobs = [];

@@ -262,13 +262,43 @@
                         <tbody>
                         <tr>
                             <td>new DataProcessing.LocalStoragePipe(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&lt;<a href="#job">Job</a>&gt;&gt; jobs)</td>
-                            <td>Instantiates a LocalStoragePipe object with a set of Job</td>>
+                            <td>Instantiates a LocalStoragePipe object with a set of Job</td>
                         </tr>
                         </tbody>
                     </table>
 
                     <pre><code id="pipe-local-storage-code"></code></pre>
                     <pre><code id="pipe-local-storage-console" class="console"></code></pre>
+
+                </article>
+
+                <article id="pipe-cloud">
+
+                    <h2>CloudPipe</h2>
+
+                    <p>
+                        A CloudPipe is a Pipe. It works on the internet cloud. This pipe could be share between multiple browser on the internet. It uses the <a href="https://www.firebase.com/">Firebase</a> API.
+                    </p>
+
+                    <h3>Creation</h3>
+
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Constructor</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>new DataProcessing.CloudPipe(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&lt;<a href="#job">Job</a>&gt;&gt; jobs)</td>
+                            <td>Instantiates a CloudPipe object with a set of Job</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <pre><code id="pipe-cloud-code"></code></pre>
+                    <pre><code id="pipe-cloud-console" class="console"></code></pre>
 
                 </article>
 
@@ -314,6 +344,11 @@
                                 LocalStoragePipe
                             </a>
                         </li>
+                        <li>
+                            <a href="#pipe-cloud">
+                                CloudPipe
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -343,6 +378,7 @@
 <script src="../src/pipe/StoragePipe.js"></script>
 <script src="../src/pipe/LocalStoragePipe.js"></script>
 <script src="../src/pipe/SessionStoragePipe.js"></script>
+<script src="../src/pipe/CloudPipe.js"></script>
 <script src="../src/job/Job.js"></script>
 <!-- endbuild -->
 
@@ -454,6 +490,33 @@
 
     pipe.onFinish(function(results){
         console.log('#pipe-local-storage-console', results);
+    });
+
+})();
+</script>
+
+<script class="code" data-target="#pipe-cloud-code">
+(function(){
+    var texts = ['A piece of text', 'A piece of text...', 'A piece of text!'];
+    var jobs = [];
+    for(var i in texts){
+        jobs.push(new DataProcessing.Job([texts[i]], function(text){
+            return text.length;
+        }));
+    }
+
+    var pipe = new DataProcessing.CloudPipe(jobs);
+
+    pipe.onJob(function(job){
+        job.run();
+    });
+
+    pipe.onResult(function(result){
+        console.log('#pipe-cloud-console', result);
+    });
+
+    pipe.onFinish(function(results){
+        console.log('#pipe-cloud-console', results);
     });
 
 })();

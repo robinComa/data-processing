@@ -64,7 +64,11 @@ DataProcessing.Util = {
         /*jslint evil: false */
 
         if(ObjClass === DataProcessing.Job){
-            return new ObjClass(obj.args, obj.fn);
+            var job = new ObjClass(obj.args, obj.fn);
+            if(obj._pipeId){
+                job._pipeId = obj._pipeId;
+            }
+            return job;
         }
 
         throw 'unSerialize ERROR : Unsupported class.';
