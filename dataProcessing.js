@@ -263,12 +263,14 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
         var $scope = this;
         this.onJobInterval = setInterval(function(){
             var jobs = $scope._sliceJob();
-            var onFinish = function(result){
-                $scope._pushResult(pipeId, result);
+            var onFinish = function(pipeId){
+                return function(result){
+                    $scope._pushResult(pipeId, result);
+                };
             };
             for (var i in jobs){
                 var pipeId = jobs[i]._pipeId;
-                jobs[i].onFinish(onFinish);
+                jobs[i].onFinish(onFinish(pipeId));
                 callback(jobs[i]);
             }
         }, this.INTERVAL_JOB);
@@ -308,7 +310,6 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
 DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
     _clear: function(){
-        //delete DataProcessing.MemoryPipe[this.JOB_PIPE_KEY];
         delete DataProcessing.MemoryPipe[this.RESULT_PIPE_KEY][this._id];
         return this;
     },
@@ -349,9 +350,17 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
 DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
 
+    __getJobKey: function(){
+        return this.JOB_PIPE_KEY + ' - ' + this._id;
+    },
+
+    __getResultKey: function(){
+        return this.RESULT_PIPE_KEY + ' - ' + this._id;
+    },
+
     _clear: function(){
-        this._getStorage().removeItem(this.JOB_PIPE_KEY);
-        this._getStorage().removeItem(this.RESULT_PIPE_KEY);
+        this._getStorage().removeItem(this.__getJobKey());
+        this._getStorage().removeItem(this.__getResultKey());
         return this;
     },
 
@@ -360,34 +369,34 @@ DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
     },
 
     _pushJobs: function(jobs){
-        var jobsSerialized = JSON.parse(this._getStorage().getItem(this.JOB_PIPE_KEY)) || [];
+        var jobsSerialized = JSON.parse(this._getStorage().getItem(this.__getJobKey())) || [];
         for(var i in jobs){
             jobsSerialized.push(jobs[i].serialize());
         }
-        this._getStorage().setItem(this.JOB_PIPE_KEY, JSON.stringify(jobsSerialized));
+        this._getStorage().setItem(this.__getJobKey(), JSON.stringify(jobsSerialized));
         return this;
     },
 
     _sliceJob: function(){
-        var jobsSerialized = JSON.parse(this._getStorage().getItem(this.JOB_PIPE_KEY)) || [];
+        var jobsSerialized = JSON.parse(this._getStorage().getItem(this.__getJobKey())) || [];
         var jobs = [];
         for(var i in jobsSerialized){
             jobs.push(DataProcessing.Util.unSerialize(jobsSerialized[i], DataProcessing.Job));
         }
-        this._getStorage().removeItem(this.JOB_PIPE_KEY);
+        this._getStorage().removeItem(this.__getJobKey());
         return jobs;
     },
 
-    _pushResult: function(result){
-        var results = JSON.parse(this._getStorage().getItem(this.RESULT_PIPE_KEY)) || [];
+    _pushResult: function(pipeId, result){
+        var results = JSON.parse(this._getStorage().getItem(this.__getResultKey())) || [];
         results.push(result);
-        this._getStorage().setItem(this.RESULT_PIPE_KEY, JSON.stringify(results));
+        this._getStorage().setItem(this.__getResultKey(), JSON.stringify(results));
         return this;
     },
 
     _sliceResults: function(){
-        var results = JSON.parse(this._getStorage().getItem(this.RESULT_PIPE_KEY)) || [];
-        this._getStorage().removeItem(this.RESULT_PIPE_KEY);
+        var results = JSON.parse(this._getStorage().getItem(this.__getResultKey())) || [];
+        this._getStorage().removeItem(this.__getResultKey());
         return results;
     }
 
