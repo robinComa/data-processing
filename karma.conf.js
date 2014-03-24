@@ -16,6 +16,7 @@ module.exports = function (config) {
             'src/pipe/StoragePipe.js',
             'src/pipe/LocalStoragePipe.js',
             'src/pipe/SessionStoragePipe.js',
+            'src/pipe/CloudPipe.js',
             'src/job/Job.js',
             'test/spec/**/*.js'
         ],
