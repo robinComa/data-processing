@@ -14,7 +14,10 @@ describe('Class : SessionStoragePipe', function () {
 
         var pipe = new DataProcessing.SessionStoragePipe([j, j, j]);
 
-        pipe.onJob(callback);
+        pipe.onJob(function(job){
+            job.run();
+            callback();
+        });
 
         waitsFor(function() {
             return callback.callCount === 3;
