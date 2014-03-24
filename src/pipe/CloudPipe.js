@@ -29,7 +29,7 @@ DataProcessing.CloudPipe = DataProcessing.Pipe.extend({
             }
         };
 
-        if(typeof Firebase === "undefined"){
+        if(typeof Firebase === 'undefined'){
             var script = document.createElement('script');
             script.onload = function(){
                 onFirebase();

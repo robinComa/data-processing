@@ -21,6 +21,7 @@
     "smarttabs": true,
     "globals": {
         "DataProcessing": true,
-        "postMessage": false
+        "postMessage": false,
+        "Firebase": true
     }
 }
