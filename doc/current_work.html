@@ -17,7 +17,7 @@
             }));
         }
 
-        var pipe = new DataProcessing.MemoryPipe(jobs);
+        var pipe = new DataProcessing.CloudPipe(jobs);
 
         pipe.onJob(function(job){
             job.run();
@@ -41,7 +41,7 @@
             }));
         }
 
-        var pipe = new DataProcessing.MemoryPipe(jobs);
+        var pipe = new DataProcessing.CloudPipe(jobs);
 
         pipe.onJob(function(job){
             job.run();

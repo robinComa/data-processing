@@ -91,7 +91,11 @@ DataProcessing.Util = {
         /*jslint evil: false */
 
         if(ObjClass === DataProcessing.Job){
-            return new ObjClass(obj.args, obj.fn);
+            var job = new ObjClass(obj.args, obj.fn);
+            if(obj._pipeId){
+                job._pipeId = obj._pipeId;
+            }
+            return job;
         }
 
         throw 'unSerialize ERROR : Unsupported class.';
@@ -350,17 +354,8 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
 DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
 
-    __getJobKey: function(){
-        return this.JOB_PIPE_KEY + ' - ' + this._id;
-    },
-
-    __getResultKey: function(){
-        return this.RESULT_PIPE_KEY + ' - ' + this._id;
-    },
-
     _clear: function(){
-        this._getStorage().removeItem(this.__getJobKey());
-        this._getStorage().removeItem(this.__getResultKey());
+        this._getStorage().removeItem(this.RESULT_PIPE_KEY + ' - ' + this._id);
         return this;
     },
 
@@ -369,34 +364,34 @@ DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
     },
 
     _pushJobs: function(jobs){
-        var jobsSerialized = JSON.parse(this._getStorage().getItem(this.__getJobKey())) || [];
+        var jobsSerialized = JSON.parse(this._getStorage().getItem(this.JOB_PIPE_KEY)) || [];
         for(var i in jobs){
             jobsSerialized.push(jobs[i].serialize());
         }
-        this._getStorage().setItem(this.__getJobKey(), JSON.stringify(jobsSerialized));
+        this._getStorage().setItem(this.JOB_PIPE_KEY, JSON.stringify(jobsSerialized));
         return this;
     },
 
     _sliceJob: function(){
-        var jobsSerialized = JSON.parse(this._getStorage().getItem(this.__getJobKey())) || [];
+        var jobsSerialized = JSON.parse(this._getStorage().getItem(this.JOB_PIPE_KEY)) || [];
         var jobs = [];
         for(var i in jobsSerialized){
             jobs.push(DataProcessing.Util.unSerialize(jobsSerialized[i], DataProcessing.Job));
         }
-        this._getStorage().removeItem(this.__getJobKey());
+        this._getStorage().removeItem(this.JOB_PIPE_KEY);
         return jobs;
     },
 
     _pushResult: function(pipeId, result){
-        var results = JSON.parse(this._getStorage().getItem(this.__getResultKey())) || [];
+        var results = JSON.parse(this._getStorage().getItem(this.RESULT_PIPE_KEY + ' - ' + pipeId)) || [];
         results.push(result);
-        this._getStorage().setItem(this.__getResultKey(), JSON.stringify(results));
+        this._getStorage().setItem(this.RESULT_PIPE_KEY + ' - ' + pipeId, JSON.stringify(results));
         return this;
     },
 
     _sliceResults: function(){
-        var results = JSON.parse(this._getStorage().getItem(this.__getResultKey())) || [];
-        this._getStorage().removeItem(this.__getResultKey());
+        var results = JSON.parse(this._getStorage().getItem(this.RESULT_PIPE_KEY + ' - ' + this._id)) || [];
+        this._getStorage().removeItem(this.RESULT_PIPE_KEY + ' - ' + this._id);
         return results;
     }
 
