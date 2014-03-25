@@ -4,9 +4,11 @@ module.exports = function (config) {
         basePath : '',
 
         // Fix for "JASMINE is not supported anymore" warning
-        frameworks : ["jasmine"],
+        frameworks : ['jasmine'],
 
         files : [
+            'test/polyfill.js',
+
             'src/copyright.js',
             'src/DataProcessing.js',
             'src/core/Utils.js',
@@ -18,6 +20,7 @@ module.exports = function (config) {
             'src/pipe/SessionStoragePipe.js',
             'src/pipe/CloudPipe.js',
             'src/job/Job.js',
+
             'test/spec/**/*.js'
         ],
 
