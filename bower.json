@@ -1,11 +1,36 @@
 {
-  "name": "data-processing",
-  "version": "0.0.0",
-  "dependencies": {
+    "name": "data-processing",
+    "version": "0.0.0",
+    "license": "MIT",
 
-  },
-  "devDependencies": {
-    "bootstrap": "3.1.1",
-    "highlightjs": "8.0.0"
-  }
+    "description": "Your code could be processed by another tabs of your browser or another browsers on the WEB",
+
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:robinComa/data-processing.git"
+    },
+
+    "authors": [{
+        "name": "Robin Coma Delperier",
+        "homepage": "http://fr.linkedin.com/pub/robin-coma-delp%C3%A9rier/59/943/344"
+    }],
+
+    "keywords": [
+        "data",
+        "processing",
+        "bigdata",
+        "cloud",
+        "map reduce",
+        "web worker",
+        "distributed",
+        "javascript"
+    ],
+
+    "dependencies": {
+
+    },
+    "devDependencies": {
+        "bootstrap": "3.1.1",
+        "highlightjs": "8.0.0"
+    }
 }
