@@ -231,7 +231,11 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
     INTERVAL_JOB: 100,
     INTERVAL_RESULT: 100,
 
-    JOB_MAX: 2,
+    JOB_MAX_PARALLEL: 10,
+
+    getMaxJob: function(){
+        return this.JOB_MAX_PARALLEL - DataProcessing.Job.NB_JOBS;
+    },
 
     initialize: function (jobs) {
         var id = this._id = DataProcessing.Util.guid();
@@ -330,7 +334,7 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
     _sliceJob: function(){
         var jobs = [];
-        for(var i = 0; i < this.JOB_MAX && DataProcessing.MemoryPipe[this.JOB_PIPE_KEY].length > 0; i++){
+        for(var i = 0; i < this.getMaxJob() && DataProcessing.MemoryPipe[this.JOB_PIPE_KEY].length > 0; i++){
             jobs.push(DataProcessing.MemoryPipe[this.JOB_PIPE_KEY].pop());
         }
         return jobs;
@@ -376,7 +380,7 @@ DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
     _sliceJob: function(){
         var jobsSerialized = JSON.parse(this._getStorage().getItem(this.JOB_PIPE_KEY)) || [];
         var jobs = [];
-        for(var i = 0; i < this.JOB_MAX && jobsSerialized.length > 0; i++){
+        for(var i = 0; i < this.getMaxJob() && jobsSerialized.length > 0; i++){
             jobs.push(DataProcessing.Util.unSerialize(jobsSerialized.pop(), DataProcessing.Job));
         }
         this._getStorage().setItem(this.JOB_PIPE_KEY, JSON.stringify(jobsSerialized));
@@ -439,7 +443,7 @@ DataProcessing.CloudPipe = DataProcessing.Pipe.extend({
                 this.__jobs.push(snapshot.val());
             };
 
-            this.JOB_PIPE_KEY.startAt().limit(this.JOB_MAX).on('child_added', onJobAdded.bind(this));
+            this.JOB_PIPE_KEY.startAt().limit(this.JOB_MAX_PARALLEL).on('child_added', onJobAdded.bind(this));
 
             var onResultAdded = function(snapshot){
                 snapshot.ref().remove();
@@ -468,7 +472,7 @@ DataProcessing.CloudPipe = DataProcessing.Pipe.extend({
 
     _sliceJob: function(){
         var jobs = [];
-        for(var i = 0; i < this.JOB_MAX && this.__jobs.length > 0; i++){
+        for(var i = 0; i < this.getMaxJob() && this.__jobs.length > 0; i++){
             jobs.push(DataProcessing.Util.unSerialize(this.__jobs.pop(), DataProcessing.Job));
         }
         return jobs;
@@ -505,7 +509,10 @@ DataProcessing.Job = DataProcessing.Class.extend({
         var worker = new Worker(domainScriptURL);
         var $scope = this;
 
+        DataProcessing.Job.NB_JOBS = (DataProcessing.Job.NB_JOBS || 0) + 1;
+
         worker.onmessage = function (oEvent) {
+            DataProcessing.Job.NB_JOBS--;
             if($scope._onFinish){
                 $scope._onFinish(oEvent.data);
             }else{
