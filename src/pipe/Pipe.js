@@ -7,6 +7,8 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
     INTERVAL_JOB: 100,
     INTERVAL_RESULT: 100,
 
+    JOB_MAX: 2,
+
     initialize: function (jobs) {
         var id = this._id = DataProcessing.Util.guid();
         this._results = [];

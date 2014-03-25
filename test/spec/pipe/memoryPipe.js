@@ -8,16 +8,28 @@ describe('Class : MemoryPipe', function () {
     it('MemoryPipe should return jobs', function () {
 
         var callback = jasmine.createSpy();
+        var callbackFinish = jasmine.createSpy();
         var j = new DataProcessing.Job([], function(){
             return;
         });
 
         var pipe = new DataProcessing.MemoryPipe([j, j, j]);
 
-        pipe.onJob(callback);
+        pipe.onJob(function(job){
+            job.run();
+            callback();
+        });
+
+        pipe.onResult(function(results){
+
+        });
+
+        pipe.onFinish(function(results){
+            callbackFinish();
+        });
 
         waitsFor(function() {
-            return callback.callCount === 3;
+            return callback.callCount === 3 && callbackFinish.callCount > 0;
         }, 'The Worker end timed out.', TIMEOUT);
 
         runs(function() {
@@ -28,6 +40,8 @@ describe('Class : MemoryPipe', function () {
     it('MemoryPipe should return results', function () {
 
         var callback = jasmine.createSpy();
+        var callbackFinish = jasmine.createSpy();
+
         var j = new DataProcessing.Job([], function(){
             return;
         });
@@ -36,12 +50,16 @@ describe('Class : MemoryPipe', function () {
 
         pipe.onResult(callback);
 
+        pipe.onFinish(function(results){
+            callbackFinish();
+        });
+
         pipe.onJob(function(job){
             job.run();
         });
 
         waitsFor(function() {
-            return callback.callCount > 0;
+            return callback.callCount === 3 && callbackFinish.callCount > 0;
         }, 'The Worker end timed out.', TIMEOUT);
 
         runs(function() {

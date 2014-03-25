@@ -43,7 +43,7 @@ describe('Class : CloudPipe', function () {
         var callbackFinish = jasmine.createSpy();
 
         var j = new DataProcessing.Job([], function(){
-            return "result as string";
+            return "result as string 2";
         });
 
         var pipe = new DataProcessing.CloudPipe([j, j, j]);
