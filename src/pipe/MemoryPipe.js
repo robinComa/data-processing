@@ -17,7 +17,7 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
     _sliceJob: function(){
         var jobs = [];
-        for(var i = 0; i < this.JOB_MAX && DataProcessing.MemoryPipe[this.JOB_PIPE_KEY].length > 0; i++){
+        for(var i = 0; i < this.getMaxJob() && DataProcessing.MemoryPipe[this.JOB_PIPE_KEY].length > 0; i++){
             jobs.push(DataProcessing.MemoryPipe[this.JOB_PIPE_KEY].pop());
         }
         return jobs;

@@ -17,7 +17,10 @@ DataProcessing.Job = DataProcessing.Class.extend({
         var worker = new Worker(domainScriptURL);
         var $scope = this;
 
+        DataProcessing.Job.NB_JOBS = (DataProcessing.Job.NB_JOBS || 0) + 1;
+
         worker.onmessage = function (oEvent) {
+            DataProcessing.Job.NB_JOBS--;
             if($scope._onFinish){
                 $scope._onFinish(oEvent.data);
             }else{

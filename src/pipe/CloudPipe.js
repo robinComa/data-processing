@@ -22,7 +22,7 @@ DataProcessing.CloudPipe = DataProcessing.Pipe.extend({
                 this.__jobs.push(snapshot.val());
             };
 
-            this.JOB_PIPE_KEY.startAt().limit(this.JOB_MAX).on('child_added', onJobAdded.bind(this));
+            this.JOB_PIPE_KEY.startAt().limit(this.JOB_MAX_PARALLEL).on('child_added', onJobAdded.bind(this));
 
             var onResultAdded = function(snapshot){
                 snapshot.ref().remove();
@@ -51,7 +51,7 @@ DataProcessing.CloudPipe = DataProcessing.Pipe.extend({
 
     _sliceJob: function(){
         var jobs = [];
-        for(var i = 0; i < this.JOB_MAX && this.__jobs.length > 0; i++){
+        for(var i = 0; i < this.getMaxJob() && this.__jobs.length > 0; i++){
             jobs.push(DataProcessing.Util.unSerialize(this.__jobs.pop(), DataProcessing.Job));
         }
         return jobs;

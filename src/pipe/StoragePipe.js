@@ -23,7 +23,7 @@ DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
     _sliceJob: function(){
         var jobsSerialized = JSON.parse(this._getStorage().getItem(this.JOB_PIPE_KEY)) || [];
         var jobs = [];
-        for(var i = 0; i < this.JOB_MAX && jobsSerialized.length > 0; i++){
+        for(var i = 0; i < this.getMaxJob() && jobsSerialized.length > 0; i++){
             jobs.push(DataProcessing.Util.unSerialize(jobsSerialized.pop(), DataProcessing.Job));
         }
         this._getStorage().setItem(this.JOB_PIPE_KEY, JSON.stringify(jobsSerialized));

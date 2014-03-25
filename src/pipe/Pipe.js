@@ -7,7 +7,11 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
     INTERVAL_JOB: 100,
     INTERVAL_RESULT: 100,
 
-    JOB_MAX: 2,
+    JOB_MAX_PARALLEL: 10,
+
+    getMaxJob: function(){
+        return this.JOB_MAX_PARALLEL - DataProcessing.Job.NB_JOBS;
+    },
 
     initialize: function (jobs) {
         var id = this._id = DataProcessing.Util.guid();
