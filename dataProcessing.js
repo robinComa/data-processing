@@ -231,6 +231,8 @@ DataProcessing.Pipe = DataProcessing.Class.extend({
     INTERVAL_JOB: 100,
     INTERVAL_RESULT: 100,
 
+    JOB_MAX: 2,
+
     initialize: function (jobs) {
         var id = this._id = DataProcessing.Util.guid();
         this._results = [];
@@ -328,8 +330,7 @@ DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
     _sliceJob: function(){
         var jobs = [];
-        var MAX = 2;
-        for(var i = 0; i < MAX && DataProcessing.MemoryPipe[this.JOB_PIPE_KEY].length > 0; i++){
+        for(var i = 0; i < this.JOB_MAX && DataProcessing.MemoryPipe[this.JOB_PIPE_KEY].length > 0; i++){
             jobs.push(DataProcessing.MemoryPipe[this.JOB_PIPE_KEY].pop());
         }
         return jobs;
@@ -375,10 +376,10 @@ DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
     _sliceJob: function(){
         var jobsSerialized = JSON.parse(this._getStorage().getItem(this.JOB_PIPE_KEY)) || [];
         var jobs = [];
-        for(var i in jobsSerialized){
-            jobs.push(DataProcessing.Util.unSerialize(jobsSerialized[i], DataProcessing.Job));
+        for(var i = 0; i < this.JOB_MAX && jobsSerialized.length > 0; i++){
+            jobs.push(DataProcessing.Util.unSerialize(jobsSerialized.pop(), DataProcessing.Job));
         }
-        this._getStorage().removeItem(this.JOB_PIPE_KEY);
+        this._getStorage().setItem(this.JOB_PIPE_KEY, JSON.stringify(jobsSerialized));
         return jobs;
     },
 
@@ -420,51 +421,55 @@ DataProcessing.CloudPipe = DataProcessing.Pipe.extend({
 
     _clear: function(){
         this.RESULT_PIPE_KEY.child(this._id).remove();
+        this.JOB_PIPE_KEY.off('child_added', this._onChildAdded);
         return this;
     },
 
     _pushJobs: function(jobs){
-        var $scope = this;
-        $scope._jobs = [];
-        $scope._results = [];
 
-        var onFirebase = function() {
-            $scope.JOB_PIPE_KEY = new Firebase('https://cloud-map-reduce-jobs-pipe.firebaseio.com/');
-            $scope.RESULT_PIPE_KEY = new Firebase('https://cloud-map-reduce-jobs-results.firebaseio.com/');
+        this.__jobs = [];
+        this.__results = [];
 
-            $scope.JOB_PIPE_KEY.on('child_added', function(snapshot) {
-                $scope._jobs.push(snapshot.val());
+        this._onFirebase = function() {
+            this.JOB_PIPE_KEY = new Firebase('https://cloud-map-reduce-jobs-pipe.firebaseio.com/');
+            this.RESULT_PIPE_KEY = new Firebase('https://cloud-map-reduce-jobs-results.firebaseio.com/');
+
+            var onJobAdded = function(snapshot){
                 snapshot.ref().remove();
-            });
-            $scope.RESULT_PIPE_KEY.child($scope._id).on('child_added', function(snapshot) {
-                $scope._results.push(snapshot.val());
-            });
+                this.__jobs.push(snapshot.val());
+            };
+
+            this.JOB_PIPE_KEY.startAt().limit(this.JOB_MAX).on('child_added', onJobAdded.bind(this));
+
+            var onResultAdded = function(snapshot){
+                snapshot.ref().remove();
+                this.__results.push(snapshot.val());
+            };
+
+            this.RESULT_PIPE_KEY.child(this._id).on('child_added', onResultAdded.bind(this));
+            this.RESULT_PIPE_KEY.child(this._id).onDisconnect().remove();
 
             for(var i in jobs){
-                $scope.JOB_PIPE_KEY.push(jobs[i].serialize());
+                this.JOB_PIPE_KEY.push(jobs[i].serialize());
             }
         };
 
         if(typeof Firebase === 'undefined'){
             var script = document.createElement('script');
-            script.onload = function(){
-                onFirebase();
-            };
+            script.onload = this._onFirebase.bind(this);
             script.src = 'https://cdn.firebase.com/js/client/1.0.6/firebase.js';
             document.getElementsByTagName('head')[0].appendChild(script);
         }else{
-            onFirebase();
+            this._onFirebase();
         }
 
         return this;
     },
 
     _sliceJob: function(){
-        var jobsSerialized = this._jobs;
-        this._jobs = [];
         var jobs = [];
-        for(var i in jobsSerialized){
-            jobs.push(DataProcessing.Util.unSerialize(jobsSerialized[i], DataProcessing.Job));
+        for(var i = 0; i < this.JOB_MAX && this.__jobs.length > 0; i++){
+            jobs.push(DataProcessing.Util.unSerialize(this.__jobs.pop(), DataProcessing.Job));
         }
         return jobs;
     },
@@ -475,8 +480,8 @@ DataProcessing.CloudPipe = DataProcessing.Pipe.extend({
     },
 
     _sliceResults: function(){
-        var results = this._results;
-        this._results = [];
+        var results = this.__results;
+        this.__results = [];
         return results;
     }
 
