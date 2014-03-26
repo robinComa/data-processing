@@ -298,6 +298,83 @@
 
                 </article>
 
+                <article id="map-reduce">
+
+                    <h2>MapReduce</h2>
+
+                    <p>
+                        A <a target="_blank" href="http://en.wikipedia.org/wiki/MapReduce">Map Reduce</a> paradigm implementation over a <a href="#pipe">Pipe</a>.
+                    </p>
+
+                    <h3>Creation</h3>
+
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Constructor</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>new DataProcessing.MapReduce(&lt;<a href="#pipe">Pipe</a>&gt; pipeImplClass)</td>
+                            <td>
+                                Instantiates a MapReduce object over a type of <a href="#pipe">Pipe</a> implementation :
+                                <ul>
+                                    <li><a href="#pipe-memory">MemoryStorage</a></li>
+                                    <li><a href="#pipe-session-storage">SessionStoragePipe</a></li>
+                                    <li><a href="#pipe-local-storage">LocalStoragePipe</a></li>
+                                    <li><a href="#pipe-cloud">CloudPipe</a></li>
+                                </ul>
+                             </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Methods</h3>
+
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Return</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>addCollection(&lt;<a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>&lt;<a href="http://www.w3schools.com/js/js_objects.asp">Object</a>&gt;&gt;)</td>
+                            <td>&lt;this&gt;</td>
+                            <td>Each objects of this collection are the inputs of the map function.</td>
+                        </tr>
+                        <tr>
+                            <td>addCollection(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; collectionGenerator)</td>
+                            <td>&lt;this&gt;</td>
+                            <td>The collectionGenerator should return an <a href="http://www.w3schools.com/js/js_obj_array.asp">Array</a>. Each objects of this collection are the inputs of the map function.</td>
+                        </tr>
+                        <tr>
+                            <td>map(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
+                            <td>&lt;this&gt;</td>
+                            <td>It is map function executed for each jobs. It is executed on <a target="_blank" href="http://en.wikipedia.org/wiki/Web_worker">Web Worker</a>.</td>
+                        </tr>
+                        <tr>
+                            <td>reduce(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; fn)</td>
+                            <td>&lt;this&gt;</td>
+                            <td>Receive a map result and update the global result. It is executed on <a target="_blank" href="http://en.wikipedia.org/wiki/Web_worker">Web Worker</a>.</td>
+                        </tr>
+                        <tr>
+                            <td>then(&lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; resolve, &lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; reject, &lt;<a href="http://www.w3schools.com/js/js_functions.asp">function</a>&gt; notify)</td>
+                            <td>&lt;this&gt;</td>
+                            <td>The promise callbacks.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <pre><code id="map-reduce-code"></code></pre>
+                    <pre><code id="map-reduce-console" class="console"></code></pre>
+
+                </article>
+
             </section>
         </div>
 
@@ -343,6 +420,18 @@
                         <li>
                             <a href="#pipe-cloud">
                                 CloudPipe
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#map-reduce">
+                        MapReduce
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="#job-http">
+                                $http
                             </a>
                         </li>
                     </ul>
@@ -495,6 +584,49 @@
 
     pipe.onFinish(function(results){
         console.log('#pipe-cloud-console', results);
+    });
+
+})();
+</script>
+
+<script class="code" data-target="#map-reduce-code">
+(function(){
+    var mapReduce = new DataProcessing.MapReduce(DataProcessing.MemoryPipe);
+
+    mapReduce.addCollection(function(){
+        return [
+            'Ad et vinculis adfligens in',
+            'Et vinculis adfligens in ad',
+            'adfligens et strages'
+        ];
+    });
+
+    mapReduce.map(function(text){
+        var words = text.split(/\s/g);
+        var results = {};
+        for(var i in words){
+            var word = words[i].toLowerCase();
+            results[word] ? results[word]++ : results[word] = 1;
+        }
+        return results;
+    });
+
+    mapReduce.reduce(function(mapResult, currentResult){
+        for(var i in mapResult){
+            currentResult[i] = (currentResult[i] || 0) + mapResult[i];
+        }
+        return currentResult;
+    });
+
+    mapReduce.then(function(results){
+        // Resolve callback
+        console.log('#map-reduce-console', 'Resolve : ', results);
+    },function(error){
+        // Reject callback
+        console.log('#map-reduce-console', 'Reject : ', error);
+    },function(result){
+        // Notify callback
+        console.log('#map-reduce-console', 'Notify : ', result);
     });
 
 })();
