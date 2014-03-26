@@ -5,7 +5,7 @@
 'use strict';
 
 var DataProcessing = {
-    version: '0.0.2'
+    version: '0.0.1'
 };
 
 function expose() {
