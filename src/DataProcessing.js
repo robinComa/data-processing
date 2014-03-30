@@ -1,7 +1,5 @@
-'use strict';
-
 var DataProcessing = {
-    version: '0.0.1'
+    version: '@build.version'
 };
 
 function expose() {

@@ -1,5 +1,3 @@
-'use strict';
-
 DataProcessing.Job = DataProcessing.Class.extend({
 
     initialize: function (args, fn) {
@@ -43,8 +41,8 @@ DataProcessing.Job = DataProcessing.Class.extend({
         }
         var code =
             this._workerScaffolding.toString()
-                .replace('\'__fn__\'', this.fn)
-                .replace('\'__args__\'', args);
+                .replace(/['"]__fn__['"]/, this.fn)
+                .replace(/['"]__args__['"]/, args);
         return [
             '(',
             code,

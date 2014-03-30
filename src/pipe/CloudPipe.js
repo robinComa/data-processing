@@ -1,5 +1,3 @@
-'use strict';
-
 DataProcessing.CloudPipe = DataProcessing.Pipe.extend({
 
     _clear: function(){

@@ -1,5 +1,3 @@
-'use strict';
-
 DataProcessing.MemoryPipe = DataProcessing.Pipe.extend({
 
     _clear: function(){

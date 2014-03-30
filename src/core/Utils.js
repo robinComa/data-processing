@@ -1,5 +1,3 @@
-'use strict';
-
 /*
  * DataProcessing.Util contains various utility functions used throughout Leaflet code.
  */

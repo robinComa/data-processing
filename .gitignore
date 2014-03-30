@@ -15,9 +15,8 @@
 log/
 target/
 
-# Grunt + Bower
-.grunt
-.tmp
+# Gulp + Bower
+.build
 node_modules
 bower_components
 dist

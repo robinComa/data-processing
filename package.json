@@ -1,23 +1,24 @@
 {
-  "name": "data-processing",
-  "version": "0.0.1",
-  "dependencies": {},
-  "devDependencies": {
-      "matchdep": "~0.3.0",
-      "grunt": "~0.4.2",
-      "grunt-contrib-clean": "~0.5.0",
-      "grunt-regarde": "~0.1.1",
-      "grunt-contrib-connect":  "~0.6.0",
-      "grunt-contrib-livereload": "~0.1.2",
-      "grunt-open": "~0.2.3",
-      "grunt-contrib-copy": "~0.5.0",
-      "grunt-contrib-concat": "~0.3.0",
-      "grunt-usemin": "~2.0.2",
-      "grunt-contrib-jshint": "~0.8.0",
-      "grunt-karma": "~0.6.2",
-      "grunt-gh-pages": "~0.9.1"
-  },
-  "engines": {
-    "node": ">=0.8.0"
-  }
+    "name": "data-processing",
+    "version": "0.0.0",
+    "dependencies": {},
+    "devDependencies": {
+        "gulp": "3.5.6",
+        "gulp-livereload": "1.2.0",
+        "gulp-concat": "2.2.0",
+        "gulp-jshint": "1.5.1",
+        "gulp-strip-debug": "0.3.0",
+        "gulp-uglify": "0.2.1",
+        "node-static": "0.7.3",
+        "gulp-plumber": "0.5.6",
+        "gulp-open": "0.2.8",
+        "gulp-karma": "0.0.4",
+        "karma-jasmine": "0.1.5",
+        "karma-phantomjs-launcher": "0.1.2",
+        "gulp-gh-pages": "0.1.4",
+        "gulp-replace": "0.2.0"
+    },
+    "engines": {
+        "node": ">=0.8.0"
+    }
 }

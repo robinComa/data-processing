@@ -1,5 +1,3 @@
-'use strict';
-
 DataProcessing.StoragePipe = DataProcessing.Pipe.extend({
 
     _clear: function(){

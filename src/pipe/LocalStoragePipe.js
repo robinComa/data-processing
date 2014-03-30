@@ -1,5 +1,3 @@
-'use strict';
-
 DataProcessing.LocalStoragePipe = DataProcessing.StoragePipe.extend({
 
     _getStorage: function(){

@@ -1,5 +1,3 @@
-'use strict';
-
 DataProcessing.Pipe = DataProcessing.Class.extend({
 
     JOB_PIPE_KEY: 'DATA_PROCESSING : JOB PIPE',

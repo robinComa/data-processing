@@ -1,5 +1,3 @@
-'use strict';
-
 DataProcessing.MapReduce = DataProcessing.Class.extend({
 
     initialize: function (PipeImplementationClass) {
